@@ -12,37 +12,65 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Live;
 using Microsoft.Live.Controls;
+using System.Windows.Media.Imaging;
+using Microsoft.Phone.UserData;
 
 namespace LyncUp
 {
     public partial class LogIn : PhoneApplicationPage
     {
         private LiveConnectClient client;
+        private LiveConnectSession session;
 
         public LogIn()
         {
             InitializeComponent();
+
+
+            Contacts cons = new Contacts();
+
+            //Identify the method that runs after the asynchronous search completes.
+            cons.SearchCompleted += new EventHandler<ContactsSearchEventArgs>(Contacts_SearchCompleted);
+
+            //Start the asynchronous search.
+            cons.SearchAsync(String.Empty, FilterKind.None, "Contacts Test #1");
+        }
+
+        void Contacts_SearchCompleted(object sender, ContactsSearchEventArgs e)
+        {
+            //Do something with the results.
+            //MessageBox.Show(e.Results.Count().ToString());
+
+            IEnumerable<Contact> contacts = e.Results;
+            foreach (Contact c in contacts)
+            {
+
+            }
         }
 
         private void btnSignin_SessionChanged(object sender, LiveConnectSessionChangedEventArgs e)
         {
             if (e.Status == LiveConnectSessionStatus.Connected)
             {
-                client = new LiveConnectClient(e.Session);
+                session = e.Session;
+                client = new LiveConnectClient(session);
                 infoTextBlock.Text = "Signed in.";
-                client.GetCompleted += 
-                    new EventHandler<LiveOperationCompletedEventArgs>(OnGetCompleted);
-                client.GetAsync("me", null);
+                client.GetCompleted += new EventHandler<LiveOperationCompletedEventArgs>(OnGetCompleted);
+                client.GetAsync("me/contacts", null);
             }
             else
             {
                 infoTextBlock.Text = "Not signed in.";
                 client = null;
             }
+
+            //client.GetAsync("me/contacts");
         }
+
 
         void OnGetCompleted(object sender, LiveOperationCompletedEventArgs e)
         {
+
             if (e.Error == null)
             {
                 string firstName = "";
@@ -71,6 +99,8 @@ namespace LyncUp
                 {
                     infoTextBlock.Text = "Hello, signed-in user!";
                 }
+
+
             }
             else 
             {
@@ -78,5 +108,7 @@ namespace LyncUp
                     e.Error.ToString();
             }
         }
+
+
     }
 }
