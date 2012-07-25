@@ -46,7 +46,7 @@ namespace SmashSampleApp
         /// Just for this sample application, we hard-code a managementID.
         /// In a real application, this should be generated once and kept securely as an owner-specific secrect.
         /// </summary>
-        private const string ManagementID = "0B797E34-905A-406D-B8CF-F57DC6EB083A";
+        private string ManagementID = "0B797E34-905A-406D-B8CF-F57DC6EB083A";
 
         /// <summary>
         /// 
@@ -87,6 +87,8 @@ namespace SmashSampleApp
             //this.SendText.Click += new RoutedEventHandler(this.SendText_Click);
             //this.Join.Click += new RoutedEventHandler(this.Join_Click);
             //this.Create.Click += new RoutedEventHandler(this.Create_Click);
+
+            ManagementID = Guid.NewGuid().ToString();
 
             mainPage = this;
             if (state != null)
