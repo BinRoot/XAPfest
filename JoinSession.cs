@@ -78,6 +78,12 @@ namespace SmashSampleApp
             return this.GetMeetingToken(token);
         }
 
+        public void JoinMeeting(string roomStr) 
+        {
+            TextEntry.Text = roomStr;
+            JoinMeeting();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -163,6 +169,8 @@ namespace SmashSampleApp
 
             TextEntry.Text = token;
             MessageBox.Show(token);
+
+            DataUse.Instance.RoomName = token;
         }
 
         /// <summary>

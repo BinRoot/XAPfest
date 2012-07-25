@@ -23,6 +23,8 @@ namespace SmashSampleApp
         string friendid;
         string myid;
 
+        MainPage MP;
+
         public InvitationPage()
         {
             InitializeComponent();
@@ -43,7 +45,10 @@ namespace SmashSampleApp
                 PageTitle.Text = friend;
             }
 
-            DataUse.Instance.EventId = long.Parse(eventid);
+            //DataUse.Instance.EventId = long.Parse(eventid);
+
+            MP = new MainPage();
+            MP.JoinMeeting(eventid);
 
             base.OnNavigatedTo(e);
         }
@@ -57,8 +62,8 @@ namespace SmashSampleApp
 
             DataUse.Instance.DS.GetPushKey(friendid, this);
 
-
-
+            string message = friend+" hello from invitation page";
+            MP.SendText(message);
         }
 
         public void SendToastToUser(string pushkey)
@@ -71,6 +76,7 @@ namespace SmashSampleApp
             DataTable["friendstatus"] = "yes";
             PushAPI.SendToastToUser(pushkey, Title, SubTitle, DataTable, "MainPage");
 
+            
         }
 
 

@@ -41,7 +41,7 @@ namespace SmashSampleApp
             SendText(DateTime.Now.ToLongTimeString() + " " + TextEntry.Text);
         }
 
-        private void SendText(string textStr)
+        public void SendText(string textStr)
         {
             if (this.chat != null)
             {

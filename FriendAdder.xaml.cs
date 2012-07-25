@@ -121,7 +121,7 @@ namespace SmashSampleApp
             string TextBoxTitle = "LyncUp";
             string TextBoxSubTitle = DataUse.Instance.MyUserName + " wants to lync up!";
             string FriendName = DataUse.Instance.MyUserName;
-            string EventId = DataUse.Instance.EventId + "";
+            string EventId = DataUse.Instance.RoomName;
 
             HttpWebRequest request = (HttpWebRequest)asynchronousResult.AsyncState;
 
