@@ -105,7 +105,7 @@ namespace SmashSampleApp
             string SubTitle = DataUse.Instance.MyUserName + " wants to lync up!";
             string FriendName = DataUse.Instance.MyUserName;
             string FriendId = DataUse.Instance.MyUserId;
-            string EventId = DataUse.Instance.EventId + "";
+            string EventId = DataUse.Instance.RoomName + "";
             IDictionary DataTable = new Dictionary<string, string>();
             DataTable["friend"] = FriendName;
             DataTable["eventid"] = EventId;
