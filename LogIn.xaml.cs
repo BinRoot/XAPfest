@@ -66,6 +66,7 @@ namespace SmashSampleApp
                             lastName = e.Result["last_name"].ToString();
                         }
                     }
+
                     infoTextBlock.Text =
                         "Welcome, " + firstName + " " + lastName + "!";
 

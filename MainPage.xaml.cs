@@ -33,6 +33,8 @@ namespace SmashSampleApp
     using Microsoft.Phone.Tasks;
     using Microsoft.Phone.Notification;
     using System.Text;
+    using System.IO.IsolatedStorage;
+    using System.Windows.Media.Imaging;
 
     /// <summary>
     /// 
@@ -75,16 +77,54 @@ namespace SmashSampleApp
         /// </summary>
         ///
 
+        private bool InSetupMode { 
+            get
+            {
+                bool setupMode = false;
+                try
+                {
+                    setupMode = (Boolean)settings["setupMode"];
+                }
+                catch (KeyNotFoundException knfe)
+                {
+                    setupMode = true;
+                }
+                return setupMode;
+            }
+        }
 
+        Dictionary<String, GeoCoordinate> friendMap = new Dictionary<string,GeoCoordinate>();
         GeoCoordinateWatcher watcher;
         IDataService DS;
 
+        // MY GOD THIS IS GOING TO NEED REFACTORING!!!
+        public MainPage(bool createNewEvent)
+        {
+            this.InitializeComponent();
+
+            this.VerifyHawaiiId();
+
+            ManagementID = Guid.NewGuid().ToString();
+        }
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            this.VerifyHawaiiId(); 
+            this.VerifyHawaiiId();
+
+            if (InSetupMode == false)
+            {
+                setUpDone();
+            }
+            else
+            {
+                ApplicationBar.IsVisible = false;
+            }
+
+            FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
+
+            //TestImage.Source = new BitmapImage(new Uri("https://apis.live.net/v5.0/" + DataUse.Instance.MyUserId + "/picture", UriKind.Absolute));
             
             //this.SendText.Click += new RoutedEventHandler(this.SendText_Click);
             //this.Join.Click += new RoutedEventHandler(this.Join_Click);
@@ -103,7 +143,7 @@ namespace SmashSampleApp
                 this.session = SmashSession.JoinSessionFromState(HawaiiClient.HawaiiApplicationId, this.Dispatcher, state, new ISmashTable[] { this.chat });
             }
 
-
+            
 
             MainPanorama.DefaultItem = MainPanorama.Items[1];
             DS = new DataService(this);
@@ -221,6 +261,16 @@ namespace SmashSampleApp
                     System.Globalization.CompareOptions.IgnoreCase) == 0)
                 {
                     relativeUri = e.Collection[key];
+
+                    if (relativeUri.Contains("InvitationPage.xaml"))
+                    {
+                        Uri uri = new Uri(relativeUri, UriKind.Relative);
+                        System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { NavigationService.Navigate(uri); });
+                        return;
+                    }
+                    
+
+
                     string[] dataParts = (relativeUri.Split('?')[1]).Split('&');
 
                     string Status = "";
@@ -305,12 +355,17 @@ namespace SmashSampleApp
         public void RespondToGetFriends(List<Friend> Friends)
         {
             DataUse.Instance.FriendsList = Friends;
+
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             NavigationService.RemoveBackEntry();
+
+
+            FinalizeList.DataContext = null;
+            FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
         }
 
         // Load data for the ViewModel Items
@@ -373,6 +428,8 @@ namespace SmashSampleApp
         {
             // MessageBox.Show("But here's my number, so call me maybe?");
 
+            //TODO: remove this dummy test code
+            setUpDone();
         }
 
         private void RemovePerson_Button(object sender, RoutedEventArgs e)
@@ -634,13 +691,85 @@ namespace SmashSampleApp
                 if (v.Count != 0)
                 {
                     string newMessage = v[v.Count - 1].ChatEntry;
-                    MessageBox.Show("new message: " + newMessage);
                     
+                    string [] strSplit = newMessage.Split(',');
+                    if (strSplit.Length == 3)
+                    {
+                        MessageBox.Show("msg received: " + newMessage);
+                        string friendid = strSplit[0];
+                        string latStr = strSplit[1];
+                        string lonStr = strSplit[2];
+
+                        try 
+                        {
+                            double latd = double.Parse(latStr);
+                            double lond = double.Parse(lonStr);
+                            GeoCoordinate g = new GeoCoordinate(latd, lond);
+                            friendMap[friendid] = g;
+                            friendLocationUpdated();
+                        }
+                        catch 
+                        {}
+                        
+                    }
+                    else
+                    {
+                        MessageBox.Show("msg received, but incorrect format: " + newMessage);
+                    }
                 }
             }
         }
 
+        private void setUpDone()
+        {
+            AddOrUpdateSettings("setupMode", false);
+            ApplicationBar.IsVisible = true;
+            MainPanorama.Visibility = Visibility.Collapsed;
+            MainMap.Visibility = Visibility.Visible;
 
+        }
+
+        IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
+        public bool AddOrUpdateSettings(string Key, Object value)
+        {
+            bool valueChanged = false;
+
+            // If the key exists
+            if (settings.Contains(Key))
+            {
+                // If the value has changed
+                if (settings[Key] != value)
+                {
+                    // Store the new value
+                    settings[Key] = value;
+                    settings.Save();
+                    valueChanged = true;
+                }
+            }
+            // Otherwise create the key.
+            else
+            {
+                settings.Add(Key, value);
+                settings.Save();
+                valueChanged = true;
+            }
+            return valueChanged;
+        }
+
+
+        private void friendLocationUpdated()
+        {
+            // update the map using friendMap<String, GeoCordinate> dictionary
+        }
+
+        private void Leave_MenuItem_Click(object sender, EventArgs e)
+        {
+            AddOrUpdateSettings("setupMode", true);
+            MainPanorama.Visibility = Visibility.Visible;
+            MainMap.Visibility = Visibility.Collapsed;
+            ApplicationBar.IsVisible = false;
+
+        }
 
     }
 }

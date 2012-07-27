@@ -115,6 +115,7 @@ namespace SmashSampleApp
             }
             else
             {
+                
                 this.chat = new SmashTable<Channels.ChatRecord>("Chat");
                 Dispatcher.BeginInvoke(() =>
                 {
@@ -123,6 +124,8 @@ namespace SmashSampleApp
                 SessionManager sessionManager = new SessionManager();
                 sessionManager.JoinSessionCompleted += new JoinSessionCompletedHandler(this.SessionManager_JoinSessionCompleted);
                 sessionManager.JoinSessionAsync(HawaiiClient.HawaiiApplicationId, this.Dispatcher, this.GetMeetingToken(token), user, email, Microsoft.Phone.Info.DeviceStatus.DeviceName, new ISmashTable[] { this.chat }, null);
+                
+                MessageBox.Show("I've Joied room " + token);
             }
         }
 
@@ -168,7 +171,7 @@ namespace SmashSampleApp
             sessionManager.CreateSessionAsync(HawaiiClient.HawaiiApplicationId, this.GetMeetingToken(out token), TextEntry.Text, user, email, new string[] { "*" }, TimeSpan.FromMinutes(60), new Guid(ManagementID), token);
 
             TextEntry.Text = token;
-            MessageBox.Show(token);
+            MessageBox.Show("created: "+token);
 
             DataUse.Instance.RoomName = token;
         }
