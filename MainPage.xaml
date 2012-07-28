@@ -30,7 +30,7 @@
         <toolkit2:LoopingSelector x:Name="selector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemMargin="2,3,3,2" ItemSize="100,100" Visibility="Visible"/>
 
 
-        <TextBlock Name="NotReadyText" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Name="NotReadyText" Visibility="Collapsed" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
 
         <!--Panorama control-->
