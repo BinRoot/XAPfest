@@ -781,8 +781,8 @@ namespace SmashSampleApp
                     string [] strSplit = newMessage.Split(',');
                     if (strSplit.Length == 3)
                     {
-                        MessageBox.Show("msg received: " + newMessage);
-                        string friendid = strSplit[0];
+                        // MessageBox.Show("msg received: " + newMessage);
+                        string friendid = strSplit[0].Replace("(): ", "").TrimStart();
                         string latStr = strSplit[1];
                         string lonStr = strSplit[2];
 

@@ -38,7 +38,7 @@ namespace SmashSampleApp
         /// <param name="e"></param>
         private void SendText_Click(object sender, RoutedEventArgs e)
         {
-            SendText(DateTime.Now.ToLongTimeString() + " " + TextEntry.Text);
+            SendText(TextEntry.Text);
         }
 
         public void SendText(string textStr)
