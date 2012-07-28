@@ -27,6 +27,8 @@
 
         <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
 
+        <TextBlock Name="NotReadyText" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        
         <!--Panorama control-->
         <controls:Panorama Title="" Name="MainPanorama">
             <controls:Panorama.Background>
@@ -178,7 +180,7 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </Grid>
-                    <Button Content="Go" />
+                    <Button Content="Go" Tap="Go_Tap" />
                 </StackPanel>
             </controls:PanoramaItem>
         </controls:Panorama>

@@ -235,6 +235,9 @@ namespace SmashSampleApp
             }
             #endregion
 
+
+
+            
         }
 
 
@@ -448,7 +451,7 @@ namespace SmashSampleApp
             // MessageBox.Show("But here's my number, so call me maybe?");
 
             //TODO: remove this dummy test code
-            setUpDone();
+            // setUpDone();
         }
 
         private void RemovePerson_Button(object sender, RoutedEventArgs e)
@@ -827,7 +830,26 @@ namespace SmashSampleApp
             AddOrUpdateSettings("setupMode", false);
             ApplicationBar.IsVisible = true;
             MainPanorama.Visibility = Visibility.Collapsed;
-            MainMap.Visibility = Visibility.Visible;
+
+            try
+            {
+                Boolean isReady = (Boolean)settings["ready"];
+                if (isReady)
+                {
+                    MainMap.Visibility = Visibility.Visible;
+                    NotReadyText.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    NotReadyText.Visibility = Visibility.Visible;
+                }
+            }
+            catch
+            {
+
+            }
+            
+            
 
         }
 
@@ -927,10 +949,23 @@ namespace SmashSampleApp
 
         private void Leave_MenuItem_Click(object sender, EventArgs e)
         {
+            AddOrUpdateSettings("ready", false);
             AddOrUpdateSettings("setupMode", true);
             MainPanorama.Visibility = Visibility.Visible;
             MainMap.Visibility = Visibility.Collapsed;
             ApplicationBar.IsVisible = false;
+
+        }
+
+        private void Go_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            AddOrUpdateSettings("ready", true);
+            InformActiveFriends();
+            setUpDone();
+        }
+
+        private void InformActiveFriends()
+        {
 
         }
 

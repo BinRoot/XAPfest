@@ -16,6 +16,7 @@ using System.Collections;
 using Microsoft.Hawaii.Smash.Client;
 using System.Text;
 using System.Threading;
+using System.IO.IsolatedStorage;
 
 namespace SmashSampleApp
 {
@@ -27,6 +28,7 @@ namespace SmashSampleApp
         string myid;
 
         MainPage MP;
+        IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
 
         public InvitationPage()
         {
@@ -45,6 +47,13 @@ namespace SmashSampleApp
                 friend = this.NavigationContext.QueryString["friend"];
                 friendid = this.NavigationContext.QueryString["friendid"];
                 myid = this.NavigationContext.QueryString["myid"];
+
+                AddOrUpdateSettings("eventid", eventid);
+                AddOrUpdateSettings("friend", friend);
+                AddOrUpdateSettings("friendid", friendid);
+                AddOrUpdateSettings("myid", myid);
+                AddOrUpdateSettings("ready", false);
+                AddOrUpdateSettings("setupMode", false);
 
                 DataUse.Instance.MyUserId = myid;
                 PageTitle.Text = friend;
@@ -108,8 +117,35 @@ namespace SmashSampleApp
             DataTable["friendstatus"] = "yes";
             PushAPI.SendToastToUser(pushkey, Title, SubTitle, DataTable, "MainPage");
 
-            NavigationService.GoBack();
+            // NavigationService.GoBack();
         }
 
+
+        
+        public bool AddOrUpdateSettings(string Key, Object value)
+        {
+            bool valueChanged = false;
+
+            // If the key exists
+            if (settings.Contains(Key))
+            {
+                // If the value has changed
+                if (settings[Key] != value)
+                {
+                    // Store the new value
+                    settings[Key] = value;
+                    settings.Save();
+                    valueChanged = true;
+                }
+            }
+            // Otherwise create the key.
+            else
+            {
+                settings.Add(Key, value);
+                settings.Save();
+                valueChanged = true;
+            }
+            return valueChanged;
+        }
     }
 }

@@ -49,7 +49,9 @@ namespace SmashSampleApp
                 if (activeFriends == null)
                 {
                     activeFriends = new List<Friend>();
-                    activeFriends.Add(new Friend(MyUserName, MyUserId, ""));
+                    Friend me = new Friend(MyUserName, MyUserId, "");
+                    me.status = "yes";
+                    activeFriends.Add(me);
                 }
                 return activeFriends;
             }
