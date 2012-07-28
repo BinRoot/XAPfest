@@ -79,7 +79,7 @@ namespace SmashSampleApp
                 NoButton.IsEnabled = true;
                 YesButton.IsEnabled = true;
 
-                NavigationService.GoBack();
+                
             }
             else
             {
@@ -106,7 +106,9 @@ namespace SmashSampleApp
             IDictionary DataTable = new Dictionary<String, String>();
             DataTable["friendacceptid"] = myid;
             DataTable["friendstatus"] = "yes";
-            PushAPI.SendToastToUser(pushkey, Title, SubTitle, DataTable, "MainPage"); 
+            PushAPI.SendToastToUser(pushkey, Title, SubTitle, DataTable, "MainPage");
+
+            NavigationService.GoBack();
         }
 
     }
