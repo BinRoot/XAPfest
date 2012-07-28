@@ -84,7 +84,7 @@ namespace SmashSampleApp
             {
                 MP.SendText(DataUse.Instance.MessageToSend);
 
-                YesButtonText.Text = "Yes";
+                YesButtonText.Text = "Let's go!";
                 NoButton.IsEnabled = true;
                 YesButton.IsEnabled = true;
 
