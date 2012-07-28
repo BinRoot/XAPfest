@@ -130,8 +130,6 @@ namespace SmashSampleApp
 
             this.VerifyHawaiiId();
 
-            DataUse.Instance.ActiveFriends = new List<Friend>();
-
             if (InSetupMode == false)
             {
                 setUpDone();
@@ -567,7 +565,7 @@ namespace SmashSampleApp
 
                 foreach (var item in pushpins)
                 {
-                    if (item != null && item.GetType() == typeof(Pushpin))
+                    if (item != null)
                     {
                         LyncUpMap.Children.Remove(item);
                     }
@@ -791,18 +789,26 @@ namespace SmashSampleApp
                             double lond = double.Parse(lonStr);
                             GeoCoordinate g = new GeoCoordinate(latd, lond);
 
-                            GeoCoordinate oldLoc = friendMap[friendid];
-                            if (oldLoc != g)
+                            try
+                            {
+                                GeoCoordinate oldLoc = friendMap[friendid];
+
+                                if (oldLoc != g)
+                                {
+                                    friendMap[friendid] = g;
+                                    friendLocationUpdated();
+                                }
+                            }
+                            catch // not found
                             {
                                 friendMap[friendid] = g;
                                 friendLocationUpdated();
                             }
-
-                            
+     
                         }
-                        catch 
+                        catch(Exception er) 
                         {
-                            MessageBox.Show("err, couldn't parse double or something");
+                            MessageBox.Show("**" + er.Message);
                         }
                         
                     }
@@ -853,6 +859,7 @@ namespace SmashSampleApp
 
         private void friendLocationUpdated()
         {
+            clearMap();
             LyncUpMap.SetView(watcher.Position.Location, 10);
             List<GeoCoordinate> friendLocations = new List<GeoCoordinate>();
 
@@ -861,9 +868,18 @@ namespace SmashSampleApp
                 double averageLat = 0.0;
                 double averageLong = 0.0;
 
-                foreach (var friend in DataUse.Instance.ActiveFriends)
+                foreach (var id in friendMap.Keys)
                 {
-                    GeoCoordinate loc = friendMap[friend.id];
+                    Friend f = null;
+                    foreach (var friend in DataUse.Instance.ActiveFriends)
+                    {
+                        if (id.Equals(friend.id))
+                        {
+                            f = friend;
+                        }
+                    }
+
+                    GeoCoordinate loc = friendMap[f.id];
                     friendLocations.Add(loc);
 
                     averageLat += loc.Latitude;
@@ -876,7 +892,7 @@ namespace SmashSampleApp
                     locationPushpin.Tap += this.pin_Tap;
 
                     locationPushpin.Content = new TextBlock();
-                    ((TextBlock)locationPushpin.Content).Text = friend.name;
+                    ((TextBlock)locationPushpin.Content).Text = f.name;
                     ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
 
                     LyncUpMap.Children.Add(locationPushpin);
