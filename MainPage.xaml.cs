@@ -566,12 +566,8 @@ namespace SmashSampleApp
 
         }
 
-
-
-        private void plotLocation()
+        private void drawCircle(GeoCoordinate center, double radius)
         {
-            LyncUpMap.SetView(watcher.Position.Location, 10);
-
             MapPolygon polygon = new MapPolygon();
             polygon.Fill = new SolidColorBrush(Colors.Green);
             polygon.Stroke = new SolidColorBrush(Colors.Blue);
@@ -586,9 +582,9 @@ namespace SmashSampleApp
             polygon.Locations = new LocationCollection();
 
             var earthRadius = 6371;
-            var lat = watcher.Position.Location.Latitude * Math.PI / 180.0; //radians
-            var lon = watcher.Position.Location.Longitude * Math.PI / 180.0; //radians
-            var d = 3218.69 / 1000 / earthRadius; // d = angular distance covered on earths surface
+            var lat = center.Latitude * Math.PI / 180.0; //radians
+            var lon = center.Longitude * Math.PI / 180.0; //radians
+            var d = radius / 1000 / earthRadius; // d = angular distance covered on earths surface
 
             for (int x = 0; x <= 360; x++)
             {
@@ -596,23 +592,51 @@ namespace SmashSampleApp
                 var latRadians = Math.Asin(Math.Sin(lat) * Math.Cos(d) + Math.Cos(lat) * Math.Sin(d) * Math.Cos(brng));
                 var lngRadians = lon + Math.Atan2(Math.Sin(brng) * Math.Sin(d) * Math.Cos(lat), Math.Cos(d) - Math.Sin(lat) * Math.Sin(latRadians));
 
+
+
                 var pt = new GeoCoordinate(180.0 * latRadians / Math.PI, 180.0 * lngRadians / Math.PI);
                 polygon.Locations.Add(pt);
             }
 
             LyncUpMap.Children.Add(polygon);
+        }
 
-            Pushpin locationPushpin = new Pushpin();
-            locationPushpin.Background = new SolidColorBrush(Colors.Green);
-            locationPushpin.Location = watcher.Position.Location;
 
-            locationPushpin.Tap += this.pin_Tap;
 
-            locationPushpin.Content = new TextBlock();
-            ((TextBlock)locationPushpin.Content).Text = "My Location";
-            ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
+        private void plotLocation()
+        {
+            LyncUpMap.SetView(watcher.Position.Location, 10);
+            List<GeoCoordinate> friendLocations = new List<GeoCoordinate>();
 
-            LyncUpMap.Children.Add(locationPushpin);
+            foreach (var friend in DataUse.Instance.ActiveFriends)
+            {
+                GeoCoordinate loc = friendMap[friend.id];
+                friendLocations.Add(loc);
+
+                Pushpin locationPushpin = new Pushpin();
+                locationPushpin.Background = new SolidColorBrush(Colors.Green);
+                locationPushpin.Location = watcher.Position.Location;
+
+                locationPushpin.Tap += this.pin_Tap;
+
+                locationPushpin.Content = new TextBlock();
+                ((TextBlock)locationPushpin.Content).Text = friend.name;
+                ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
+
+                LyncUpMap.Children.Add(locationPushpin);
+            }
+
+            double averageLat = 0.0;
+            double averageLong = 0.0;
+
+            foreach (var l in friendLocations)
+            {
+                averageLat += l.Latitude;
+                averageLong += l.Longitude;
+            }
+            
+            //Pick up radius from settings
+            drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
         }
 
         #endregion
