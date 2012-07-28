@@ -75,7 +75,6 @@ namespace SmashSampleApp
             {
                 MP.SendText(DataUse.Instance.MessageToSend);
 
-                DataUse.Instance.ActiveLocationMode = true;
                 YesButtonText.Text = "Yes";
                 NoButton.IsEnabled = true;
                 YesButton.IsEnabled = true;
@@ -97,8 +96,6 @@ namespace SmashSampleApp
             // SendText(message);
             // MP.SendText(message);
 
-
-            DataUse.Instance.ActiveLocationMode = true;
         }
 
         public void SendToastToUser(string pushkey)

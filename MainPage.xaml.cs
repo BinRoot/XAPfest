@@ -861,64 +861,68 @@ namespace SmashSampleApp
 
         private void friendLocationUpdated()
         {
-            clearMap();
-
-            LyncUpMap.SetView(watcher.Position.Location, 10);
-            List<Pushpin> friendLocations = new List<Pushpin>();
-
-            try
+            if (DataUse.Instance.ActiveLocationMode)
             {
-                double averageLat = 0.0;
-                double averageLong = 0.0;
+                clearMap();
 
-                foreach (var id in friendMap.Keys)
+                LyncUpMap.SetView(watcher.Position.Location, 10);
+                List<Pushpin> friendLocations = new List<Pushpin>();
+
+                try
                 {
-                    Friend f = null;
-                    foreach (var friend in DataUse.Instance.ActiveFriends)
+                    double averageLat = 0.0;
+                    double averageLong = 0.0;
+
+                    foreach (var id in friendMap.Keys)
                     {
-                        if (id.Equals(friend.id))
+                        Friend f = null;
+                        foreach (var friend in DataUse.Instance.ActiveFriends)
                         {
-                            f = friend;
+                            if (id.Equals(friend.id))
+                            {
+                                f = friend;
+                            }
                         }
+
+                        GeoCoordinate loc = friendMap[f.id];
+
+
+                        MessageBox.Show("displaying " + f.id + ": " + loc.Latitude + ", " + loc.Longitude);
+
+
+                        averageLat += loc.Latitude;
+                        averageLong += loc.Longitude;
+
+                        Pushpin locationPushpin = new Pushpin();
+                        locationPushpin.Background = new SolidColorBrush(Colors.Green);
+                        locationPushpin.Location = loc;
+
+                        locationPushpin.Tap += this.pin_Tap;
+
+                        locationPushpin.Content = new TextBlock();
+                        ((TextBlock)locationPushpin.Content).Text = f.name;
+                        ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
+
+                        friendLocations.Add(locationPushpin);
                     }
 
-                    GeoCoordinate loc = friendMap[f.id];
+                    //Pick up radius from settings
+                    if (!(averageLat == 0.0) && !(averageLong == 0.0))
+                    {
+                        drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
+                    }
 
-
-                    MessageBox.Show("displaying " + f.id + ": " + loc.Latitude + ", " + loc.Longitude);
-
-
-                    averageLat += loc.Latitude;
-                    averageLong += loc.Longitude;
-
-                    Pushpin locationPushpin = new Pushpin();
-                    locationPushpin.Background = new SolidColorBrush(Colors.Green);
-                    locationPushpin.Location = loc;
-
-                    locationPushpin.Tap += this.pin_Tap;
-
-                    locationPushpin.Content = new TextBlock();
-                    ((TextBlock)locationPushpin.Content).Text = f.name;
-                    ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
-
-                    friendLocations.Add(locationPushpin);
+                    foreach (var item in friendLocations)
+                    {
+                        LyncUpMap.Children.Add(item);
+                    }
                 }
-
-                //Pick up radius from settings
-                if (!(averageLat == 0.0) && !(averageLong == 0.0))
+                catch (Exception er)
                 {
-                    //drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
-                }
-
-                foreach (var item in friendLocations)
-                {
-                    LyncUpMap.Children.Add(item);
+                    MessageBox.Show("shit2: " + er.Message);
                 }
             }
-            catch (Exception)
-            {
-                 MessageBox.Show("shit2");
-            }
+            
         }
 
         private void Leave_MenuItem_Click(object sender, EventArgs e)
