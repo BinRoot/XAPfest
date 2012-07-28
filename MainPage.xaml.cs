@@ -883,6 +883,11 @@ namespace SmashSampleApp
                 {
                     MainMap.Visibility = Visibility.Visible;
                     NotReadyText.Visibility = Visibility.Collapsed;
+
+                    string eventname = (string)settings["eventname"];
+                    string eventloc = (string)settings["eventloc"];
+
+                    MessageBox.Show(eventname + " at " + eventloc);
                 }
                 else
                 {
@@ -944,7 +949,7 @@ namespace SmashSampleApp
         private void Go_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             AddOrUpdateSettings("ready", true);
-            // InformActiveFriends();
+            InformActiveFriends();
             setUpDone();
         }
 
@@ -960,10 +965,13 @@ namespace SmashSampleApp
                     Dictionary<string, string> dataDic = new Dictionary<string,string>();
                     dataDic["friendid"] = DataUse.Instance.MyUserId;
                     dataDic["eventname"] = "event name...";
-                    dataDic["eventloc"] = "lat..."+"lon...";
+                    dataDic["eventloc"] = "3"+ "," +"4";
 
-
-                    PushAPI.SendToastToUser(f.pushkey, title, subtitle, dataDic, "MainPage");
+                    if (f.pushkey != "")
+                    {
+                        PushAPI.SendToastToUser(f.pushkey, title, subtitle, dataDic, "MainPage");
+                    }
+                    
                 }
             }
         }

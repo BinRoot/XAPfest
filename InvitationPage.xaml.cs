@@ -61,7 +61,7 @@ namespace SmashSampleApp
                 
                 MP = new MainPage(false);
 
-                MessageBox.Show("I want to join the chatroom: " + eventid);
+                // MessageBox.Show("I want to join the chatroom: " + eventid);
                 MP.JoinMeeting(eventid);
             }
 
