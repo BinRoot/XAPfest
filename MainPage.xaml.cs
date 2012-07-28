@@ -862,8 +862,9 @@ namespace SmashSampleApp
         private void friendLocationUpdated()
         {
             clearMap();
+
             LyncUpMap.SetView(watcher.Position.Location, 10);
-            List<GeoCoordinate> friendLocations = new List<GeoCoordinate>();
+            List<Pushpin> friendLocations = new List<Pushpin>();
 
             try
             {
@@ -882,7 +883,6 @@ namespace SmashSampleApp
                     }
 
                     GeoCoordinate loc = friendMap[f.id];
-                    friendLocations.Add(loc);
 
 
                     MessageBox.Show("displaying " + f.id + ": " + loc.Latitude + ", " + loc.Longitude);
@@ -893,7 +893,7 @@ namespace SmashSampleApp
 
                     Pushpin locationPushpin = new Pushpin();
                     locationPushpin.Background = new SolidColorBrush(Colors.Green);
-                    locationPushpin.Location = watcher.Position.Location;
+                    locationPushpin.Location = loc;
 
                     locationPushpin.Tap += this.pin_Tap;
 
@@ -901,7 +901,7 @@ namespace SmashSampleApp
                     ((TextBlock)locationPushpin.Content).Text = f.name;
                     ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
 
-                    LyncUpMap.Children.Add(locationPushpin);
+                    friendLocations.Add(locationPushpin);
                 }
 
                 //Pick up radius from settings
@@ -909,10 +909,15 @@ namespace SmashSampleApp
                 {
                     //drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
                 }
+
+                foreach (var item in friendLocations)
+                {
+                    LyncUpMap.Children.Add(item);
+                }
             }
             catch (Exception)
             {
-                // MessageBox.Show("shit2");
+                 MessageBox.Show("shit2");
             }
         }
 
