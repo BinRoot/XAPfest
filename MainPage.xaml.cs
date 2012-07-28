@@ -130,6 +130,8 @@ namespace SmashSampleApp
 
             this.VerifyHawaiiId();
 
+            DataUse.Instance.ActiveLocationMode = true;
+
             if (InSetupMode == false)
             {
                 setUpDone();

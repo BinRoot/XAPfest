@@ -177,7 +177,13 @@ namespace SmashSampleApp
                 {
                     DataUse.Instance.RoomCreated = true;
                     // MessageBox.Show("sent message "+DataUse.Instance.MessageToSend);
-                    // SendText(DataUse.Instance.MessageToSend);
+
+
+                    if (DataUse.Instance.ActiveLocationMode)
+                    {
+                        SendText(DataUse.Instance.MessageToSend);
+                    }
+                    // 
                 }
                 //this.Join.IsEnabled = true;
                 //this.Create.IsEnabled = true;
