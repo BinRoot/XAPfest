@@ -291,6 +291,13 @@ namespace SmashSampleApp
                         System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { NavigationService.Navigate(uri); });
                         return;
                     }
+
+                    //if (relativeUri.Contains("MainPage.xaml"))
+                    //{
+                    //    Uri uri = new Uri(relativeUri, UriKind.Relative);
+                    //    System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { NavigationService.Navigate(uri); });
+                    //    return;
+                    //}
                     
 
 
@@ -923,13 +930,28 @@ namespace SmashSampleApp
         private void Go_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             AddOrUpdateSettings("ready", true);
-            InformActiveFriends();
+            // InformActiveFriends();
             setUpDone();
         }
 
         private void InformActiveFriends()
         {
+            foreach (Friend f in DataUse.Instance.ActiveFriends)
+            {
+                if (f.status != "no")
+                {
+                    string title = "LyncUp";
+                    string subtitle = DataUse.Instance.MyUserName + " has chosen a place to lync up!";
 
+                    Dictionary<string, string> dataDic = new Dictionary<string,string>();
+                    dataDic["friendid"] = DataUse.Instance.MyUserId;
+                    dataDic["eventname"] = "event name...";
+                    dataDic["eventloc"] = "lat..."+"lon...";
+
+
+                    PushAPI.SendToastToUser(f.pushkey, title, subtitle, dataDic, "MainPage");
+                }
+            }
         }
     }
 }
