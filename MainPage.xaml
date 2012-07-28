@@ -27,7 +27,7 @@
     <Grid x:Name="LayoutRoot" Background="Transparent">
 
         <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
-        <toolkit2:LoopingSelector x:Name="selector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemMargin="2,3,3,2" ItemSize="100,100" Visibility="Visible"/>
+        <toolkit2:LoopingSelector Visibility="Collapsed" x:Name="selector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemMargin="2,3,3,2" ItemSize="100,100"/>
 
 
         <TextBlock Name="NotReadyText" Visibility="Collapsed" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />

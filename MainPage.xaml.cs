@@ -36,6 +36,7 @@ namespace SmashSampleApp
     using System.Text;
     using System.IO.IsolatedStorage;
     using System.Windows.Media.Imaging;
+    using System.Windows.Navigation;
 
     /// <summary>
     /// 
@@ -239,10 +240,31 @@ namespace SmashSampleApp
             #endregion
 
 
-
-            
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            NavigationService.RemoveBackEntry();
+            FinalizeList.DataContext = null;
+            FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
+
+            if (this.NavigationContext.QueryString.ContainsKey("friendid")
+                && this.NavigationContext.QueryString.ContainsKey("eventname")
+                && this.NavigationContext.QueryString.ContainsKey("eventloc"))
+            {
+                string friendid = this.NavigationContext.QueryString["friendid"];
+                string eventname = this.NavigationContext.QueryString["eventname"];
+                string eventloc = this.NavigationContext.QueryString["eventloc"];
+
+                AddOrUpdateSettings("ready", true);
+                AddOrUpdateSettings("friendid", friendid);
+                AddOrUpdateSettings("eventname", eventname);
+                AddOrUpdateSettings("eventloc", eventloc);
+                setUpDone();
+            }
+
+            base.OnNavigatedTo(e);
+        }
 
 
         #region [PUSH]
@@ -294,12 +316,12 @@ namespace SmashSampleApp
                         return;
                     }
 
-                    //if (relativeUri.Contains("MainPage.xaml"))
-                    //{
-                    //    Uri uri = new Uri(relativeUri, UriKind.Relative);
-                    //    System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { NavigationService.Navigate(uri); });
-                    //    return;
-                    //}
+                    if (relativeUri.Contains("eventname"))
+                    {
+                        Uri uri = new Uri(relativeUri, UriKind.Relative);
+                        System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { NavigationService.Navigate(uri); });
+                        return;
+                    }
                     
 
 
@@ -388,16 +410,6 @@ namespace SmashSampleApp
         {
             DataUse.Instance.FriendsList = Friends;
 
-        }
-
-        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-            NavigationService.RemoveBackEntry();
-
-
-            FinalizeList.DataContext = null;
-            FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
         }
 
         // Load data for the ViewModel Items
