@@ -1,10 +1,11 @@
-﻿<phone:PhoneApplicationPage 
+<phone:PhoneApplicationPage
     x:Class="SmashSampleApp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="728" 
@@ -161,11 +162,20 @@
 
             <!--Panorama item four-->
             <controls:PanoramaItem Header="finalize">
-                <!--Double line list with text wrapping-->
                 <StackPanel>
+                    <toolkit:WrapPanel ItemHeight="100" ItemWidth="100" Orientation="Horizontal" Height="200" Width="Auto">
+                        <Rectangle Fill="Aqua" Height="80" Width="80"/>
+                        <Rectangle Fill="Pink" Height="80" Width="80"/>
+                        <Rectangle Fill="Green" Height="80" Width="80"/>
+                        <Rectangle Fill="YellowGreen" Height="80" Width="80"/>
+                        <Rectangle Fill="Red" Height="80" Width="80"/>
+                    </toolkit:WrapPanel>
+                </StackPanel>
+                <!--Double line list with text wrapping-->
+                <!--<StackPanel>
                     <Image Name="TestImage" />
                     <Grid>
-                        <ListBox Name="FinalizeList" Margin="0,0,-12,0" ItemsSource="{Binding}">    
+                        <ListBox Name="FinalizeList" Margin="0,0,-12,0" ItemsSource="{Binding}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,0,0,17" Width="432" Height="78">
@@ -175,7 +185,7 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </Grid>
-                </StackPanel>
+                </StackPanel>-->
             </controls:PanoramaItem>
         </controls:Panorama>
     </Grid>
