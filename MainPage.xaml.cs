@@ -106,7 +106,7 @@ namespace SmashSampleApp
 
             ManagementID = Guid.NewGuid().ToString();
 
-
+            DataUse.Instance.ActiveLocationMode = true;
 
             #region [MAP]
             // The watcher variable was previously declared as type GeoCoordinateWatcher. 
@@ -583,7 +583,7 @@ namespace SmashSampleApp
 
 
             DataUse.Instance.MessageToSend = DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude;
-            if (DataUse.Instance.RoomCreated)
+            if (DataUse.Instance.RoomCreated && DataUse.Instance.ActiveLocationMode)
             {
                 SendText(DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude);
             }

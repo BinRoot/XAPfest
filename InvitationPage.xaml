@@ -44,8 +44,12 @@
             <ListBox Name="ChatText" Visibility="Collapsed" />
             <TextBlock Grid.ColumnSpan="2" Text="Accept Lync up request?" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-            <Button Content="No" Grid.Column="0" Grid.Row="1" Height="200"/>
-            <Button Content="Yes" Grid.Column="1" Grid.Row="1" Height="200" Click="Yes_Button_Click" />
+            <Button Name="NoButton" Grid.Column="0" Grid.Row="1" Height="200">
+                <TextBlock Name="NoButtonText" Text="No"/>
+            </Button>
+            <Button Name="YesButton" Grid.Column="1" Grid.Row="1" Height="200" Click="Yes_Button_Click" >
+                <TextBlock Name="YesButtonText" Text="Yes"/>
+            </Button>
 
         </Grid>
     </Grid>

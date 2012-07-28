@@ -25,7 +25,7 @@ namespace SmashSampleApp
         public string RoomName { get; set; }
         public bool RoomCreated { get; set; }
         public string MessageToSend { get; set; }
-        
+        public bool ActiveLocationMode { get; set; }
 
         private static DataUse instance;
         private DataUse() { }
