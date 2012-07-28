@@ -131,6 +131,8 @@ namespace SmashSampleApp
         {
             this.InitializeComponent();
 
+            selector.DataSource = new IntLoopingDataSource() { MinValue = 1, MaxValue = 5, SelectedItem = 1 };
+
             this.VerifyHawaiiId();
 
             DataUse.Instance.ActiveLocationMode = true;
@@ -444,7 +446,6 @@ namespace SmashSampleApp
 
         private void RadiusPanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            selector.DataSource = new IntLoopingDataSource() { MinValue = 1, MaxValue = 5, SelectedItem = 1 };
             MainPanorama.Visibility = Visibility.Collapsed;
             selector.Visibility = Visibility.Visible;
             selector.DataSource.SelectionChanged += new EventHandler<SelectionChangedEventArgs>(DataSource_SelectionChanged);
@@ -454,6 +455,7 @@ namespace SmashSampleApp
         {
             radiusText.Text = selector.DataSource.SelectedItem + " miles";
             MainPanorama.Visibility = Visibility.Visible;
+            plotLocation();
         }
 
         private void UpdatePanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
