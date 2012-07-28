@@ -22,6 +22,7 @@ namespace SmashSampleApp
     using System.Windows.Shapes;
 
     using Microsoft.Hawaii.Smash.Client;
+    using Microsoft.Phone.Controls.Primitives;
 
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
@@ -71,6 +72,8 @@ namespace SmashSampleApp
         /// 
         /// </summary>
         private SmashTable<Channels.ChatRecord> chat;
+
+        private bool firstPlot = true;
 
         /// <summary>
         /// Constructor
@@ -163,8 +166,6 @@ namespace SmashSampleApp
             }
 
             
-
-            MainPanorama.DefaultItem = MainPanorama.Items[1];
             DS = new DataService(this);
             DataUse.Instance.DS = DS;
             DataUse.Instance.DS.GetFriends(DataUse.Instance.MyUserId, DataUse.Instance.MyUserName);
@@ -433,14 +434,16 @@ namespace SmashSampleApp
 
         private void RadiusPanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            MessageBox.Show("and this is crazy");
+            selector.DataSource = new IntLoopingDataSource() { MinValue = 1, MaxValue = 5, SelectedItem = 1 };
+            MainPanorama.Visibility = Visibility.Collapsed;
+            selector.Visibility = Visibility.Visible;
+            selector.DataSource.SelectionChanged += new EventHandler<SelectionChangedEventArgs>(DataSource_SelectionChanged);
+        }
 
-            PhoneCallTask phoneCallTask = new PhoneCallTask();
-
-            phoneCallTask.PhoneNumber = "2065550123";
-            phoneCallTask.DisplayName = "Gage";
-
-            phoneCallTask.Show();
+        void DataSource_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            radiusText.Text = selector.DataSource.SelectedItem + " miles";
+            MainPanorama.Visibility = Visibility.Visible;
         }
 
         private void UpdatePanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -524,8 +527,6 @@ namespace SmashSampleApp
 
                 LyncUpMap.Children.Add(venuePushpin);
             }
-            
-            LyncUpMap.SetView(LocationRect.CreateLocationRect(list));
         }
 
         private void clearTooltips()
@@ -629,44 +630,71 @@ namespace SmashSampleApp
 
         private void plotLocation()
         {
-            LyncUpMap.SetView(watcher.Position.Location, 10);
-            List<GeoCoordinate> friendLocations = new List<GeoCoordinate>();
-
-            try
+            if (DataUse.Instance.ActiveLocationMode)
             {
-                double averageLat = 0.0;
-                double averageLong = 0.0;
+                clearMap();
 
-                foreach (var friend in DataUse.Instance.ActiveFriends)
+                if (firstPlot)
                 {
-                    GeoCoordinate loc = friendMap[friend.id];
-                    friendLocations.Add(loc);
-
-                    averageLat += loc.Latitude;
-                    averageLong += loc.Longitude;
-
-                    Pushpin locationPushpin = new Pushpin();
-                    locationPushpin.Background = new SolidColorBrush(Colors.Green);
-                    locationPushpin.Location = watcher.Position.Location;
-
-                    locationPushpin.Tap += this.pin_Tap;
-
-                    locationPushpin.Content = new TextBlock();
-                    ((TextBlock)locationPushpin.Content).Text = friend.name;
-                    ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
-
-                    LyncUpMap.Children.Add(locationPushpin);
+                    LyncUpMap.SetView(watcher.Position.Location, 12);
+                    firstPlot = false;
                 }
+                
+                List<Pushpin> friendLocations = new List<Pushpin>();
 
-                //Pick up radius from settings
-                if (!(averageLat == 0.0) && !(averageLong == 0.0))
+                try
                 {
-                    drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69); 
+                    double averageLat = 0.0;
+                    double averageLong = 0.0;
+
+                    foreach (var id in friendMap.Keys)
+                    {
+                        Friend f = null;
+                        foreach (var friend in DataUse.Instance.ActiveFriends)
+                        {
+                            if (id.Equals(friend.id))
+                            {
+                                f = friend;
+                            }
+                        }
+
+                        GeoCoordinate loc = friendMap[f.id];
+
+
+                        //MessageBox.Show("displaying " + f.id + ": " + loc.Latitude + ", " + loc.Longitude);
+
+
+                        averageLat += loc.Latitude;
+                        averageLong += loc.Longitude;
+
+                        Pushpin locationPushpin = new Pushpin();
+                        locationPushpin.Background = new SolidColorBrush(Colors.Green);
+                        locationPushpin.Location = loc;
+
+                        locationPushpin.Tap += this.pin_Tap;
+
+                        locationPushpin.Content = new TextBlock();
+                        ((TextBlock)locationPushpin.Content).Text = f.name;
+                        ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
+
+                        friendLocations.Add(locationPushpin);
+                    }
+
+                    //Pick up radius from settings
+                    if (!(averageLat == 0.0) && !(averageLong == 0.0))
+                    {
+                        drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), (int)selector.DataSource.SelectedItem * 1609.34);
+                    }
+
+                    foreach (var item in friendLocations)
+                    {
+                        LyncUpMap.Children.Add(item);
+                    }
                 }
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("shit");
+                catch (Exception er)
+                {
+                    MessageBox.Show("shit2: " + er.Message);
+                }
             }
         }
 
@@ -674,6 +702,10 @@ namespace SmashSampleApp
 
         private void FoodButton_Click(object sender, RoutedEventArgs e)
         {
+            clearMap();
+
+            plotLocation();
+
             FourSquareAPICall fs = new FourSquareAPICall(800, new List<string>()
                     {
 	                FourSquareAPICall.food
@@ -732,7 +764,6 @@ namespace SmashSampleApp
         {
             clearMap();
 
-
             plotLocation();
 
             FourSquareAPICall fs = new FourSquareAPICall(800, new List<string>()
@@ -747,13 +778,6 @@ namespace SmashSampleApp
 
             fs.GetVenues();
         }
-
-
-
-
-
-
-
 
         /// <summary>
         /// Varify that the Hawaii application Id is set correctly.
@@ -861,68 +885,7 @@ namespace SmashSampleApp
 
         private void friendLocationUpdated()
         {
-            if (DataUse.Instance.ActiveLocationMode)
-            {
-                clearMap();
-
-                LyncUpMap.SetView(watcher.Position.Location, 10);
-                List<Pushpin> friendLocations = new List<Pushpin>();
-
-                try
-                {
-                    double averageLat = 0.0;
-                    double averageLong = 0.0;
-
-                    foreach (var id in friendMap.Keys)
-                    {
-                        Friend f = null;
-                        foreach (var friend in DataUse.Instance.ActiveFriends)
-                        {
-                            if (id.Equals(friend.id))
-                            {
-                                f = friend;
-                            }
-                        }
-
-                        GeoCoordinate loc = friendMap[f.id];
-
-
-                        MessageBox.Show("displaying " + f.id + ": " + loc.Latitude + ", " + loc.Longitude);
-
-
-                        averageLat += loc.Latitude;
-                        averageLong += loc.Longitude;
-
-                        Pushpin locationPushpin = new Pushpin();
-                        locationPushpin.Background = new SolidColorBrush(Colors.Green);
-                        locationPushpin.Location = loc;
-
-                        locationPushpin.Tap += this.pin_Tap;
-
-                        locationPushpin.Content = new TextBlock();
-                        ((TextBlock)locationPushpin.Content).Text = f.name;
-                        ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
-
-                        friendLocations.Add(locationPushpin);
-                    }
-
-                    //Pick up radius from settings
-                    if (!(averageLat == 0.0) && !(averageLong == 0.0))
-                    {
-                        drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
-                    }
-
-                    foreach (var item in friendLocations)
-                    {
-                        LyncUpMap.Children.Add(item);
-                    }
-                }
-                catch (Exception er)
-                {
-                    MessageBox.Show("shit2: " + er.Message);
-                }
-            }
-            
+            plotLocation();
         }
 
         private void Leave_MenuItem_Click(object sender, EventArgs e)
@@ -933,6 +896,5 @@ namespace SmashSampleApp
             ApplicationBar.IsVisible = false;
 
         }
-
     }
 }

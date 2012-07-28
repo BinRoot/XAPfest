@@ -119,6 +119,7 @@
     </Compile>
     <Compile Include="HawaiiClient.cs" />
     <Compile Include="IDataService.cs" />
+    <Compile Include="IntLoopingDataSource.cs" />
     <Compile Include="InvitationPage.xaml.cs">
       <DependentUpon>InvitationPage.xaml</DependentUpon>
     </Compile>
@@ -126,6 +127,7 @@
     <Compile Include="LogIn.xaml.cs">
       <DependentUpon>LogIn.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoopingDataSourceBase.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
