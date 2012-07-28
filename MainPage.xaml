@@ -127,16 +127,32 @@
             <!--Panorama item three-->
             <controls:PanoramaItem Header="map">
                 <StackPanel Orientation="Vertical">
-                    <my:Map Height="350" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" HorizontalAlignment="Center" Name="LyncUpMap" VerticalAlignment="Center" Width="400" />
-                    <ListBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                        <StackPanel Orientation="Horizontal" MaxHeight="100" HorizontalAlignment="Center">
-                            <Button Content="Coffee" Height="100" HorizontalAlignment="Center" Name="CoffeeButton" VerticalAlignment="Center" Width="100" Click="CoffeeButton_Click" />
-                            <Button Content="Bars" Height="100" HorizontalAlignment="Center" Name="BarsButton" VerticalAlignment="Center" Width="100" Click="BarsButton_Click" />
-                            <Button Content="Shopping" Height="100" HorizontalAlignment="Center" Name="ShoppingButton" VerticalAlignment="Center" Width="100" Click="ShoppingButton_Click" />
-                            <Button Content="Attractions" Height="100" HorizontalAlignment="Center" Name="AttractionsButton" VerticalAlignment="Center" Width="100" Click="AttractionsButton_Click" />
-                            <Button Content="Service" Height="100" HorizontalAlignment="Center" Name="ServiceButton" VerticalAlignment="Center" Width="100" Click="ServiceButton_Click" />
-                        </StackPanel>
-                    </ListBox>
+
+                    <my:Map Height="350" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" HorizontalAlignment="Center" Name="LyncUpMap" VerticalAlignment="Center" Width="400" >
+                        <my:MapPolygon Fill="#99FF0000" Stroke="Red"
+                        StrokeThickness="1"
+                        Opacity="0.6"
+                        x:Name="enclosing" />
+                    </my:Map>
+
+                    
+
+                    <StackPanel Orientation="Horizontal" MaxHeight="100" HorizontalAlignment="Center">
+                        <Button Height="100" HorizontalAlignment="Center" Name="CoffeeButton" VerticalAlignment="Center" Width="100" Click="FoodButton_Click">
+                            <Image Source="/SmashSampleApp;component/Images/Icons/restaurant_icon_white.png"/>
+                        </Button>
+                        <Button Height="100" HorizontalAlignment="Center" Name="BarsButton" VerticalAlignment="Center" Width="100" Click="BarsButton_Click">
+                            <Image Source="/SmashSampleApp;component/Images/Icons/beer_icon_white.png"/>
+                        </Button>
+                        <Button Height="100" HorizontalAlignment="Center" Name="ShoppingButton" VerticalAlignment="Center" Width="100" Click="ShoppingButton_Click">
+                            <Image Source="/SmashSampleApp;component/Images/Icons/shopping_icon_white.png"/>
+                        </Button>
+                        <Button Height="100" HorizontalAlignment="Center" Name="ServiceButton" VerticalAlignment="Center" Width="100" Click="ServiceButton_Click" >
+                            <Image Source="/SmashSampleApp;component/Images/Icons/service_icon_white.png"/>
+                        </Button>
+
+                    </StackPanel>
+
                 </StackPanel>
             </controls:PanoramaItem>
 
