@@ -105,6 +105,23 @@ namespace SmashSampleApp
             this.VerifyHawaiiId();
 
             ManagementID = Guid.NewGuid().ToString();
+
+
+
+            #region [MAP]
+            // The watcher variable was previously declared as type GeoCoordinateWatcher. 
+            if (watcher == null)
+            {
+                watcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High); // using high accuracy
+                watcher.MovementThreshold = 20; // use MovementThreshold to ignore noise in the signal
+                watcher.StatusChanged += new EventHandler<GeoPositionStatusChangedEventArgs>(watcher_StatusChanged);
+                watcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(watcher_PositionChanged);
+            }
+            watcher.Start();
+
+            LyncUpMap.Tap += this.map_Tap;
+            #endregion
+
         }
 
         public MainPage()
@@ -112,6 +129,8 @@ namespace SmashSampleApp
             this.InitializeComponent();
 
             this.VerifyHawaiiId();
+
+            DataUse.Instance.ActiveFriends = new List<Friend>();
 
             if (InSetupMode == false)
             {
@@ -564,6 +583,7 @@ namespace SmashSampleApp
 
             plotLocation();
 
+            SendText(DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude);
         }
 
         private void drawCircle(GeoCoordinate center, double radius)
@@ -608,35 +628,44 @@ namespace SmashSampleApp
             LyncUpMap.SetView(watcher.Position.Location, 10);
             List<GeoCoordinate> friendLocations = new List<GeoCoordinate>();
 
-            foreach (var friend in DataUse.Instance.ActiveFriends)
+            try
             {
-                GeoCoordinate loc = friendMap[friend.id];
-                friendLocations.Add(loc);
+                foreach (var friend in DataUse.Instance.ActiveFriends)
+                {
+                    GeoCoordinate loc = friendMap[friend.id];
+                    friendLocations.Add(loc);
 
-                Pushpin locationPushpin = new Pushpin();
-                locationPushpin.Background = new SolidColorBrush(Colors.Green);
-                locationPushpin.Location = watcher.Position.Location;
+                    Pushpin locationPushpin = new Pushpin();
+                    locationPushpin.Background = new SolidColorBrush(Colors.Green);
+                    locationPushpin.Location = watcher.Position.Location;
 
-                locationPushpin.Tap += this.pin_Tap;
+                    locationPushpin.Tap += this.pin_Tap;
 
-                locationPushpin.Content = new TextBlock();
-                ((TextBlock)locationPushpin.Content).Text = friend.name;
-                ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
+                    locationPushpin.Content = new TextBlock();
+                    ((TextBlock)locationPushpin.Content).Text = friend.name;
+                    ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
 
-                LyncUpMap.Children.Add(locationPushpin);
+                    LyncUpMap.Children.Add(locationPushpin);
+                }
+
+                double averageLat = 0.0;
+                double averageLong = 0.0;
+
+                foreach (var l in friendLocations)
+                {
+                    averageLat += l.Latitude;
+                    averageLong += l.Longitude;
+                }
+
+                //Pick up radius from settings
+                drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
+            }
+            catch
+            {
+                MessageBox.Show("I BROKE HERE!");
             }
 
-            double averageLat = 0.0;
-            double averageLong = 0.0;
-
-            foreach (var l in friendLocations)
-            {
-                averageLat += l.Latitude;
-                averageLong += l.Longitude;
-            }
             
-            //Pick up radius from settings
-            drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
         }
 
         #endregion
@@ -767,7 +796,9 @@ namespace SmashSampleApp
                             friendLocationUpdated();
                         }
                         catch 
-                        {}
+                        {
+                            MessageBox.Show("err, couldn't parse double or something");
+                        }
                         
                     }
                     else

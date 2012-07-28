@@ -44,6 +44,7 @@ namespace SmashSampleApp
                 friendid = this.NavigationContext.QueryString["friendid"];
                 myid = this.NavigationContext.QueryString["myid"];
 
+                DataUse.Instance.MyUserId = myid;
                 PageTitle.Text = friend;
 
                 MP = new MainPage(false);
