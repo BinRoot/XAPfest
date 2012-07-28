@@ -581,7 +581,6 @@ namespace SmashSampleApp
 
             clearMap();
 
-            plotLocation();
 
             DataUse.Instance.MessageToSend = DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude;
             if (DataUse.Instance.RoomCreated)
@@ -635,7 +634,6 @@ namespace SmashSampleApp
 
             try
             {
-                LyncUpMap.SetView(watcher.Position.Location, 10);
                 double averageLat = 0.0;
                 double averageLong = 0.0;
 
@@ -676,10 +674,6 @@ namespace SmashSampleApp
 
         private void FoodButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap();
-
-            plotLocation();
-
             FourSquareAPICall fs = new FourSquareAPICall(800, new List<string>()
                     {
 	                FourSquareAPICall.food
@@ -796,8 +790,15 @@ namespace SmashSampleApp
                             double latd = double.Parse(latStr);
                             double lond = double.Parse(lonStr);
                             GeoCoordinate g = new GeoCoordinate(latd, lond);
-                            friendMap[friendid] = g;
-                            friendLocationUpdated();
+
+                            GeoCoordinate oldLoc = friendMap[friendid];
+                            if (oldLoc != g)
+                            {
+                                friendMap[friendid] = g;
+                                friendLocationUpdated();
+                            }
+
+                            
                         }
                         catch 
                         {
@@ -852,8 +853,45 @@ namespace SmashSampleApp
 
         private void friendLocationUpdated()
         {
-            MessageBox.Show("oh shit updating!");
-            // update the map using friendMap<String, GeoCordinate> dictionary
+            LyncUpMap.SetView(watcher.Position.Location, 10);
+            List<GeoCoordinate> friendLocations = new List<GeoCoordinate>();
+
+            try
+            {
+                double averageLat = 0.0;
+                double averageLong = 0.0;
+
+                foreach (var friend in DataUse.Instance.ActiveFriends)
+                {
+                    GeoCoordinate loc = friendMap[friend.id];
+                    friendLocations.Add(loc);
+
+                    averageLat += loc.Latitude;
+                    averageLong += loc.Longitude;
+
+                    Pushpin locationPushpin = new Pushpin();
+                    locationPushpin.Background = new SolidColorBrush(Colors.Green);
+                    locationPushpin.Location = watcher.Position.Location;
+
+                    locationPushpin.Tap += this.pin_Tap;
+
+                    locationPushpin.Content = new TextBlock();
+                    ((TextBlock)locationPushpin.Content).Text = friend.name;
+                    ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
+
+                    LyncUpMap.Children.Add(locationPushpin);
+                }
+
+                //Pick up radius from settings
+                if (!(averageLat == 0.0) && !(averageLong == 0.0))
+                {
+                    drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
+                }
+            }
+            catch (Exception)
+            {
+                // MessageBox.Show("shit2");
+            }
         }
 
         private void Leave_MenuItem_Click(object sender, EventArgs e)
