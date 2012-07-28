@@ -17,7 +17,7 @@ namespace SmashSampleApp
     public class DataUse
     {
         public List<Friend> FriendsList { get; set; }
-        public List<Friend> ActiveFriends { get; set; }
+
         public string MyUserId { get; set; }
         public string MyUserName { get; set; }
         public long EventId { get; set; }
@@ -39,7 +39,22 @@ namespace SmashSampleApp
                 return instance;
             }
         }
-
+        private List<Friend> activeFriends;
+        public List<Friend> ActiveFriends
+        {
+            get
+            {
+                if (activeFriends == null)
+                {
+                    activeFriends = new List<Friend>();
+                }
+                return activeFriends;
+            }
+            set
+            {
+                activeFriends = value;
+            }
+        }
 
     }
 }

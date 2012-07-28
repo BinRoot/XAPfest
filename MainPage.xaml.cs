@@ -630,10 +630,17 @@ namespace SmashSampleApp
 
             try
             {
+                LyncUpMap.SetView(watcher.Position.Location, 10);
+                double averageLat = 0.0;
+                double averageLong = 0.0;
+
                 foreach (var friend in DataUse.Instance.ActiveFriends)
                 {
                     GeoCoordinate loc = friendMap[friend.id];
                     friendLocations.Add(loc);
+
+                    averageLat += loc.Latitude;
+                    averageLong += loc.Longitude;
 
                     Pushpin locationPushpin = new Pushpin();
                     locationPushpin.Background = new SolidColorBrush(Colors.Green);
@@ -648,24 +655,16 @@ namespace SmashSampleApp
                     LyncUpMap.Children.Add(locationPushpin);
                 }
 
-                double averageLat = 0.0;
-                double averageLong = 0.0;
-
-                foreach (var l in friendLocations)
-                {
-                    averageLat += l.Latitude;
-                    averageLong += l.Longitude;
-                }
-
                 //Pick up radius from settings
-                drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
+                if (!(averageLat == 0.0) && !(averageLong == 0.0))
+                {
+                    drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69); 
+                }
             }
-            catch
+            catch (Exception)
             {
-                MessageBox.Show("I BROKE HERE!");
+                MessageBox.Show("shit");
             }
-
-            
         }
 
         #endregion
