@@ -494,6 +494,8 @@ namespace SmashSampleApp
             for (int i = 0; i < venues.Count; i++)
             {
                 Pushpin venuePushpin = new Pushpin();
+                venuePushpin.Background = new SolidColorBrush(Colors.Blue);
+                venuePushpin.Opacity = 0.6;
                 venuePushpin.Location = venues[i].location;
                 venuePushpin.Tap += this.pin_Tap;
 
@@ -503,7 +505,7 @@ namespace SmashSampleApp
 
                 LyncUpMap.Children.Add(venuePushpin);
             }
-
+            
             LyncUpMap.SetView(LocationRect.CreateLocationRect(list));
         }
 
@@ -568,7 +570,40 @@ namespace SmashSampleApp
 
         private void plotLocation()
         {
+            LyncUpMap.SetView(watcher.Position.Location, 10);
+
+            MapPolygon polygon = new MapPolygon();
+            polygon.Fill = new SolidColorBrush(Colors.Green);
+            polygon.Stroke = new SolidColorBrush(Colors.Blue);
+            polygon.StrokeThickness = 2;
+            polygon.Opacity = .1;
+
+            polygon.Visibility = Visibility.Collapsed;
+            if (watcher.Position.Location == null)
+                return;
+
+            polygon.Visibility = Visibility.Visible;
+            polygon.Locations = new LocationCollection();
+
+            var earthRadius = 6371;
+            var lat = watcher.Position.Location.Latitude * Math.PI / 180.0; //radians
+            var lon = watcher.Position.Location.Longitude * Math.PI / 180.0; //radians
+            var d = 3218.69 / 1000 / earthRadius; // d = angular distance covered on earths surface
+
+            for (int x = 0; x <= 360; x++)
+            {
+                var brng = x * Math.PI / 180.0; //radians
+                var latRadians = Math.Asin(Math.Sin(lat) * Math.Cos(d) + Math.Cos(lat) * Math.Sin(d) * Math.Cos(brng));
+                var lngRadians = lon + Math.Atan2(Math.Sin(brng) * Math.Sin(d) * Math.Cos(lat), Math.Cos(d) - Math.Sin(lat) * Math.Sin(latRadians));
+
+                var pt = new GeoCoordinate(180.0 * latRadians / Math.PI, 180.0 * lngRadians / Math.PI);
+                polygon.Locations.Add(pt);
+            }
+
+            LyncUpMap.Children.Add(polygon);
+
             Pushpin locationPushpin = new Pushpin();
+            locationPushpin.Background = new SolidColorBrush(Colors.Green);
             locationPushpin.Location = watcher.Position.Location;
 
             locationPushpin.Tap += this.pin_Tap;
@@ -578,12 +613,11 @@ namespace SmashSampleApp
             ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
 
             LyncUpMap.Children.Add(locationPushpin);
-            LyncUpMap.SetView(watcher.Position.Location, 14);
         }
 
         #endregion
 
-        private void CoffeeButton_Click(object sender, RoutedEventArgs e)
+        private void FoodButton_Click(object sender, RoutedEventArgs e)
         {
             clearMap();
 
@@ -591,7 +625,7 @@ namespace SmashSampleApp
 
             FourSquareAPICall fs = new FourSquareAPICall(800, new List<string>()
                     {
-	                FourSquareAPICall.coffee
+	                FourSquareAPICall.food
 	                }, LyncUpMap.Center, this
             );
 
