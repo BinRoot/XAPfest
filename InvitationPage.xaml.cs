@@ -30,6 +30,7 @@ namespace SmashSampleApp
 
         public InvitationPage()
         {
+            DataUse.Instance.ActiveLocationMode = false;
             InitializeComponent();
         }
 
@@ -48,16 +49,14 @@ namespace SmashSampleApp
                 DataUse.Instance.MyUserId = myid;
                 PageTitle.Text = friend;
 
-                DataUse.Instance.ActiveLocationMode = false;
+                
                 MP = new MainPage(false);
+
+                MessageBox.Show("I want to join the chatroom: " + eventid);
+                MP.JoinMeeting(eventid);
             }
 
-            //DataUse.Instance.EventId = long.Parse(eventid);
-
-            MessageBox.Show("I want to join the chatroom: " + eventid);
-            // join meeting at eventid
-            //JoinMeeting(eventid);
-            MP.JoinMeeting(eventid);
+            
 
 
             base.OnNavigatedTo(e);

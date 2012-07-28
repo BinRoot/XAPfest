@@ -106,7 +106,7 @@ namespace SmashSampleApp
 
             ManagementID = Guid.NewGuid().ToString();
 
-            DataUse.Instance.ActiveLocationMode = true;
+            DataUse.Instance.ActiveLocationMode = false;
 
             #region [MAP]
             // The watcher variable was previously declared as type GeoCoordinateWatcher. 
@@ -884,6 +884,10 @@ namespace SmashSampleApp
                     GeoCoordinate loc = friendMap[f.id];
                     friendLocations.Add(loc);
 
+
+                    MessageBox.Show("displaying " + f.id + ": " + loc.Latitude + ", " + loc.Longitude);
+
+
                     averageLat += loc.Latitude;
                     averageLong += loc.Longitude;
 
@@ -903,7 +907,7 @@ namespace SmashSampleApp
                 //Pick up radius from settings
                 if (!(averageLat == 0.0) && !(averageLong == 0.0))
                 {
-                    drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
+                    //drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
                 }
             }
             catch (Exception)
