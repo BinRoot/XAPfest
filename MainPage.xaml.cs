@@ -605,38 +605,44 @@ namespace SmashSampleApp
 
         private void plotLocation()
         {
-            LyncUpMap.SetView(watcher.Position.Location, 10);
-            List<GeoCoordinate> friendLocations = new List<GeoCoordinate>();
-
-            foreach (var friend in DataUse.Instance.ActiveFriends)
+            try
             {
-                GeoCoordinate loc = friendMap[friend.id];
-                friendLocations.Add(loc);
+                LyncUpMap.SetView(watcher.Position.Location, 10);
+                List<GeoCoordinate> friendLocations = new List<GeoCoordinate>();
+                double averageLat = 0.0;
+                double averageLong = 0.0;
 
-                Pushpin locationPushpin = new Pushpin();
-                locationPushpin.Background = new SolidColorBrush(Colors.Green);
-                locationPushpin.Location = watcher.Position.Location;
+                foreach (var friend in DataUse.Instance.ActiveFriends)
+                {
+                    GeoCoordinate loc = friendMap[friend.id];
+                    friendLocations.Add(loc);
 
-                locationPushpin.Tap += this.pin_Tap;
+                    averageLat += loc.Latitude;
+                    averageLong += loc.Longitude;
 
-                locationPushpin.Content = new TextBlock();
-                ((TextBlock)locationPushpin.Content).Text = friend.name;
-                ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
+                    Pushpin locationPushpin = new Pushpin();
+                    locationPushpin.Background = new SolidColorBrush(Colors.Green);
+                    locationPushpin.Location = watcher.Position.Location;
 
-                LyncUpMap.Children.Add(locationPushpin);
+                    locationPushpin.Tap += this.pin_Tap;
+
+                    locationPushpin.Content = new TextBlock();
+                    ((TextBlock)locationPushpin.Content).Text = friend.name;
+                    ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
+
+                    LyncUpMap.Children.Add(locationPushpin);
+                }
+
+                //Pick up radius from settings
+                if (!(averageLat == 0.0) && !(averageLong == 0.0))
+                {
+                    drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69); 
+                }
             }
-
-            double averageLat = 0.0;
-            double averageLong = 0.0;
-
-            foreach (var l in friendLocations)
+            catch (Exception)
             {
-                averageLat += l.Latitude;
-                averageLong += l.Longitude;
+                MessageBox.Show("shit");
             }
-            
-            //Pick up radius from settings
-            drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), 3218.69);
         }
 
         #endregion
