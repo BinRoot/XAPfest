@@ -26,12 +26,40 @@ namespace SmashSampleApp
 
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.UserData;
+    using System.IO.IsolatedStorage;
+
+
+
+
 
     /// <summary>
     /// 
     /// </summary>
     public partial class MainPage : PhoneApplicationPage
     {
+        private const string UniqueClientKey = "SMASH Unique Client ID";
+
+        /// <summary>
+        /// Smash requires client devices to have unique names to join a session
+        /// This method initializes a random identifier and stores it in the application's isolated storage for future invocations
+        /// Due to the random nature of the identifier, users cannot be tracked or identified
+        /// </summary>
+        /// <returns>a unique, randomly initialized, stable client ID</returns>
+        public static string GetUniqueClientID()
+        {
+            string clientID;
+
+            if (!IsolatedStorageSettings.ApplicationSettings.TryGetValue(UniqueClientKey, out clientID))
+            {
+                clientID = Guid.NewGuid().ToString();
+                IsolatedStorageSettings.ApplicationSettings.Add(UniqueClientKey, clientID);
+            }
+
+            return clientID;
+        }
+
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -123,7 +151,7 @@ namespace SmashSampleApp
                 });
                 SessionManager sessionManager = new SessionManager();
                 sessionManager.JoinSessionCompleted += new JoinSessionCompletedHandler(this.SessionManager_JoinSessionCompleted);
-                sessionManager.JoinSessionAsync(HawaiiClient.HawaiiApplicationId, this.Dispatcher, this.GetMeetingToken(token), user, email, Microsoft.Phone.Info.DeviceStatus.DeviceName, new ISmashTable[] { this.chat }, null);
+                sessionManager.JoinSessionAsync(HawaiiClient.HawaiiApplicationId, this.Dispatcher, this.GetMeetingToken(token), user, email, GetUniqueClientID(), new ISmashTable[] { this.chat }, null);
                 
                 MessageBox.Show("I've Joied room " + token);
             }
@@ -139,6 +167,10 @@ namespace SmashSampleApp
             this.session = e.Session;
             this.Dispatcher.BeginInvoke(() =>
             {
+                if (e.Error != null)
+                {
+                    MessageBox.Show("err: " + e.Error.Message);
+                }
                 //this.Join.IsEnabled = true;
                 //this.Create.IsEnabled = true;
             });
