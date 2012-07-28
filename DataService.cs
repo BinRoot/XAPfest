@@ -47,6 +47,11 @@ namespace SmashSampleApp
             send("http://lyncapi.appspot.com/user?pid=" + id);
         }
 
+        public void GetProfile(string id)
+        {
+            send("https://apis.live.net/v5.0/" + id +"/picture");
+        }
+
 
         public void send(string url)
         {
@@ -88,6 +93,10 @@ namespace SmashSampleApp
                 long EventId = long.Parse(e.Result);
                 DataUse.Instance.EventId = EventId;
                 MP.CreateMeeting();
+            }
+            else if (WC.BaseAddress.Contains("apis.live.net"))
+            {
+
             }
         }
     }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿<phone:PhoneApplicationPage 
     x:Class="SmashSampleApp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -172,4 +173,185 @@
             </controls:PanoramaItem>
         </controls:Panorama>
     </Grid>
+=======
+﻿<phone:PhoneApplicationPage 
+    x:Class="SmashSampleApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="728" 
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="False" 
+    xmlns:my="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
+    xmlns:converter="clr-namespace:SmashSampleApp.Converter">
+
+    <phone:PhoneApplicationPage.Resources>
+        <converter:FriendsListConverter x:Key="FriendsListConverter" />
+    </phone:PhoneApplicationPage.Resources>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+
+        <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
+
+        <!--Panorama control-->
+        <controls:Panorama Title="" Name="MainPanorama">
+            <controls:Panorama.Background>
+                <ImageBrush ImageSource="/SmashSampleApp;component/Images/background.png" Stretch="UniformToFill" />
+            </controls:Panorama.Background>
+            <controls:Panorama.TitleTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Margin="0,80,0,0">
+                        <Image x:Name="HeaderImage" Source="/SmashSampleApp;component/Images/LyncUp%20Logo%20Panorama.png" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </controls:Panorama.TitleTemplate>
+
+            <!--Panorama item one-->
+            <controls:PanoramaItem Header="settings">
+                <ListBox Margin="0,0,-12,0">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="NamePanel" Tap="NamePanel_Tap">
+                        <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/name_icon_white.png" Margin="12,0,9,0"/>
+                        <StackPanel Width="311">
+                            <TextBlock Text="display name"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                            <TextBlock Name="name" Text="jasdev singh" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="TransportationPanel" Tap="TransportationPanel_Tap">
+                        <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/bike_icon_white.png" Margin="12,0,9,0"/>
+                        <StackPanel Width="311">
+                            <TextBlock Text="transportation"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                            <TextBlock Text="bike" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="RadiusPanel" Tap="RadiusPanel_Tap">
+                        <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/radius_icon_white.png" Margin="12,0,9,0"/>
+                        <StackPanel Width="311">
+                            <TextBlock Text="meetup radius"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                            <TextBlock Text="2 miles" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="UpdatePanel" Tap="UpdatePanel_Tap">
+                        <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/update_icon_white.png" Margin="12,0,9,0" />
+                        <StackPanel Width="311">
+                            <TextBlock Text="update frequency"  TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}"/>
+                            <TextBlock Text="4 minutes" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ListBox>
+            </controls:PanoramaItem>
+
+            <!--Panorama item two-->
+            <!--Use 'Orientation="Horizontal"' to enable a panel that lays out horizontally-->
+            <controls:PanoramaItem Header="people">
+                <!--Double line list with image placeholder and text wrapping-->
+                <StackPanel Orientation="Vertical">
+
+                    <!-- A listbox hack for Hawaii Smash -->
+                    <ListBox LayoutUpdated="ChatText_LayoutUpdated" Name="ChatText" ItemsSource="{Binding}" Width="1" Height="1" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="300"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding Path=Picture}" Width="100" Height="100" Grid.Column="0" />
+                                    <ContentControl Content="{Binding Path=Text}" Grid.Column="1"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBox Visibility="Collapsed" x:Name="TextEntry" Width="400" Height="80"/>
+
+                    <ListBox Name="PeopleList" ItemsSource="{Binding}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Height="100">
+                                    <StackPanel Width="300" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding name}" FontWeight="Thin" FontSize="30" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                    <Button VerticalAlignment="Stretch" Click="RemovePerson_Button" Tag="{Binding id}">
+                                        <Image Height="60" Width="60" Margin="9,0,9,0" Source="{Binding status, Converter={StaticResource FriendsListConverter}}"/>
+                                    </Button>
+                                    <TextBlock Text="{Binding name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Height="100" VerticalAlignment="Top">
+                        <!--Replace rectangle with image-->
+                        <StackPanel Width="300" VerticalAlignment="Center">
+                            <TextBlock Text="Add a friend" FontWeight="Thin" FontSize="30" Margin="5,0,0,0"/>
+                        </StackPanel>
+                        <Button Name="AddButton" VerticalAlignment="Stretch" Click="AddPerson_Button">
+                            <Image Height="60" Width="60" Margin="9,0,9,0" Source="/SmashSampleApp;component/Images/Icons/plus_icon.png"/>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+
+            </controls:PanoramaItem>
+
+            <!--Panorama item three-->
+            <controls:PanoramaItem Header="map">
+                <StackPanel Orientation="Vertical">
+                    <my:Map Height="350" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" HorizontalAlignment="Center" Name="LyncUpMap" VerticalAlignment="Center" Width="400" />
+                    <ListBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                        <StackPanel Orientation="Horizontal" MaxHeight="100" HorizontalAlignment="Center">
+                            <Button Content="Coffee" Height="100" HorizontalAlignment="Center" Name="CoffeeButton" VerticalAlignment="Center" Width="100" Click="CoffeeButton_Click" />
+                            <Button Content="Bars" Height="100" HorizontalAlignment="Center" Name="BarsButton" VerticalAlignment="Center" Width="100" Click="BarsButton_Click" />
+                            <Button Content="Shopping" Height="100" HorizontalAlignment="Center" Name="ShoppingButton" VerticalAlignment="Center" Width="100" Click="ShoppingButton_Click" />
+                            <Button Content="Attractions" Height="100" HorizontalAlignment="Center" Name="AttractionsButton" VerticalAlignment="Center" Width="100" Click="AttractionsButton_Click" />
+                            <Button Content="Service" Height="100" HorizontalAlignment="Center" Name="ServiceButton" VerticalAlignment="Center" Width="100" Click="ServiceButton_Click" />
+                        </StackPanel>
+                    </ListBox>
+                </StackPanel>
+            </controls:PanoramaItem>
+
+            <!--Panorama item four-->
+            <controls:PanoramaItem Header="finalize">
+                <!--Double line list with text wrapping-->
+                <StackPanel>
+                    <Image Name="TestImage" />
+                    <Grid>
+                        <ListBox Name="FinalizeList" Margin="0,0,-12,0" ItemsSource="{Binding}">    
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,17" Width="432" Height="78">
+                                        <Image Width="100" Height="100" Source="{Binding ImgSrc}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </StackPanel>
+            </controls:PanoramaItem>
+        </controls:Panorama>
+    </Grid>
+
+    <!--Sample code showing usage of ApplicationBar-->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
+                <shell:ApplicationBarMenuItem Text="Leave this lync up" Click="Leave_MenuItem_Click"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+
+>>>>>>> 0161017da951a1b249a0a60d48fe764cbe9683a1
 </phone:PhoneApplicationPage>

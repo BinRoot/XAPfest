@@ -45,13 +45,18 @@ namespace SmashSampleApp
                 myid = this.NavigationContext.QueryString["myid"];
 
                 PageTitle.Text = friend;
+
+                MP = new MainPage(false);
             }
 
             //DataUse.Instance.EventId = long.Parse(eventid);
 
             MessageBox.Show("I want to join the chatroom: " + eventid);
             // join meeting at eventid
-            JoinMeeting(eventid);
+            //JoinMeeting(eventid);
+            MP.JoinMeeting(eventid);
+
+
 
             base.OnNavigatedTo(e);
         }
@@ -68,7 +73,8 @@ namespace SmashSampleApp
             string message = friend+" hello from invitation page";
             MessageBox.Show("I want to send the a message to the chatroom I joined");
            // send toast
-            SendText(message);
+            // SendText(message);
+            MP.SendText(message);
         }
 
         public void SendToastToUser(string pushkey)

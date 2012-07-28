@@ -10,6 +10,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using SmashSampleApp.Model;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 
 namespace SmashSampleApp
 {
@@ -22,6 +23,7 @@ namespace SmashSampleApp
         public long EventId { get; set; }
         public IDataService DS { get; set; }
         public string RoomName { get; set; }
+        
 
         private static DataUse instance;
         private DataUse() { }
