@@ -75,6 +75,8 @@ namespace SmashSampleApp
         private SmashTable<Channels.ChatRecord> chat;
 
         private bool firstPlot = true;
+        public List<Venue> venues;
+        public Venue selectedVenue = null;
 
         /// <summary>
         /// Constructor
@@ -534,6 +536,7 @@ namespace SmashSampleApp
 
         public void plotVenues(List<Venue> venues)
         {
+            this.venues = venues; 
             var list = (from x in venues select x.location).ToArray();
 
 
@@ -573,6 +576,11 @@ namespace SmashSampleApp
         {
             clearTooltips();
 
+            selectedVenue = (from x in venues
+                             where ((Venue)x).name == ((TextBlock)((Pushpin)sender).Content).Text
+                             select x).FirstOrDefault();
+
+            MessageBox.Show(selectedVenue.name);
             //So I heard you like casting...
             ((TextBlock)((Pushpin)sender).Content).Visibility = Visibility.Visible;
             e.Handled = true;
