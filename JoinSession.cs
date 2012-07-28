@@ -117,6 +117,8 @@ namespace SmashSampleApp
         /// </summary>
         private void JoinMeeting()
         {
+            DataUse.Instance.RoomCreated = false;
+
             if (this.session != null)
             {
                 this.session.Shutdown();
@@ -153,7 +155,7 @@ namespace SmashSampleApp
                 sessionManager.JoinSessionCompleted += new JoinSessionCompletedHandler(this.SessionManager_JoinSessionCompleted);
                 sessionManager.JoinSessionAsync(HawaiiClient.HawaiiApplicationId, this.Dispatcher, this.GetMeetingToken(token), user, email, GetUniqueClientID(), new ISmashTable[] { this.chat }, null);
                 
-                MessageBox.Show("I've Joied room " + token);
+                // MessageBox.Show("I've Joined room " + token);
             }
         }
 
@@ -170,6 +172,12 @@ namespace SmashSampleApp
                 if (e.Error != null)
                 {
                     MessageBox.Show("err: " + e.Error.Message);
+                }
+                else
+                {
+                    DataUse.Instance.RoomCreated = true;
+                    // MessageBox.Show("sent message "+DataUse.Instance.MessageToSend);
+                    SendText(DataUse.Instance.MessageToSend);
                 }
                 //this.Join.IsEnabled = true;
                 //this.Create.IsEnabled = true;
@@ -203,7 +211,7 @@ namespace SmashSampleApp
             sessionManager.CreateSessionAsync(HawaiiClient.HawaiiApplicationId, this.GetMeetingToken(out token), TextEntry.Text, user, email, new string[] { "*" }, TimeSpan.FromMinutes(60), new Guid(ManagementID), token);
 
             TextEntry.Text = token;
-            MessageBox.Show("created: "+token);
+            // MessageBox.Show("created: "+token);
 
             DataUse.Instance.RoomName = token;
         }

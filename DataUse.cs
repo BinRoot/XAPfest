@@ -23,6 +23,8 @@ namespace SmashSampleApp
         public long EventId { get; set; }
         public IDataService DS { get; set; }
         public string RoomName { get; set; }
+        public bool RoomCreated { get; set; }
+        public string MessageToSend { get; set; }
         
 
         private static DataUse instance;

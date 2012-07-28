@@ -583,7 +583,12 @@ namespace SmashSampleApp
 
             plotLocation();
 
-            SendText(DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude);
+            DataUse.Instance.MessageToSend = DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude;
+            if (DataUse.Instance.RoomCreated)
+            {
+                SendText(DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude);
+            }
+            
         }
 
         private void drawCircle(GeoCoordinate center, double radius)
@@ -847,6 +852,7 @@ namespace SmashSampleApp
 
         private void friendLocationUpdated()
         {
+            MessageBox.Show("oh shit updating!");
             // update the map using friendMap<String, GeoCordinate> dictionary
         }
 

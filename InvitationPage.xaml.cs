@@ -75,7 +75,7 @@ namespace SmashSampleApp
             MessageBox.Show("I want to send the a message to the chatroom I joined");
            // send toast
             // SendText(message);
-            MP.SendText(message);
+            // MP.SendText(message);
         }
 
         public void SendToastToUser(string pushkey)
