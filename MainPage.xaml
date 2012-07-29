@@ -143,6 +143,7 @@
                         StrokeThickness="1"
                         Opacity="0.6"
                         x:Name="enclosing" />
+                        <my:MapLayer x:Name="RouteLayer" />
                     </my:Map>
 
 
