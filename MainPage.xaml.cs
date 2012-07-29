@@ -577,11 +577,13 @@ namespace SmashSampleApp
         {
             clearTooltips();
 
-            selectedVenue = (from x in venues
-                             where ((Venue)x).name == ((TextBlock)((Pushpin)sender).Content).Text
-                             select x).FirstOrDefault();
+            if (venues != null)
+            {
+                selectedVenue = (from x in venues
+                                 where ((Venue)x).name == ((TextBlock)((Pushpin)sender).Content).Text
+                                 select x).FirstOrDefault();
+            }
 
-            MessageBox.Show(selectedVenue.name);
             //So I heard you like casting...
             ((TextBlock)((Pushpin)sender).Content).Visibility = Visibility.Visible;
             e.Handled = true;
@@ -592,7 +594,7 @@ namespace SmashSampleApp
             clearTooltips();
         }
 
-        private void clearMap()
+        private void clearMap(Type t)
         {
             //Add logic only to remove location pins versus venue pins
             if (LyncUpMap.Children.Count != 0)
@@ -601,7 +603,7 @@ namespace SmashSampleApp
 
                 foreach (var item in pushpins)
                 {
-                    if (item != null)
+                    if (item != null && t == item.GetType())
                     {
                         LyncUpMap.Children.Remove(item);
                     }
@@ -613,7 +615,7 @@ namespace SmashSampleApp
         {
             LyncUpMap.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
 
-            clearMap();
+            clearMap(typeof(Object));
 
 
             DataUse.Instance.MessageToSend = DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude;
@@ -656,7 +658,7 @@ namespace SmashSampleApp
                 polygon.Locations.Add(pt);
             }
 
-            LyncUpMap.Children.Add(polygon);
+            LyncUpMap.Children.Insert(0, polygon);
         }
 
 
@@ -665,7 +667,7 @@ namespace SmashSampleApp
         {
             if (DataUse.Instance.ActiveLocationMode)
             {
-                clearMap();
+                clearMap(typeof(MapPolygon));
 
                 if (firstPlot)
                 {
@@ -735,7 +737,7 @@ namespace SmashSampleApp
 
         private void FoodButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap();
+            clearMap(typeof(Pushpin));
 
             plotLocation();
 
@@ -750,7 +752,7 @@ namespace SmashSampleApp
 
         private void BarsButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap();
+            clearMap(typeof(Pushpin));
 
             plotLocation();
 
@@ -765,7 +767,7 @@ namespace SmashSampleApp
 
         private void ShoppingButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap();
+            clearMap(typeof(Pushpin));
 
             plotLocation();
 
@@ -780,7 +782,7 @@ namespace SmashSampleApp
 
         private void AttractionsButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap();
+            clearMap(typeof(Pushpin));
 
             plotLocation();
 
@@ -795,7 +797,7 @@ namespace SmashSampleApp
 
         private void ServiceButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap();
+            clearMap(typeof(Pushpin));
 
             plotLocation();
 

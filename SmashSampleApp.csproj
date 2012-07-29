@@ -190,7 +190,7 @@
     <Resource Include="Images\Icons\update_icon.png" />
     <Resource Include="Images\Icons\update_icon_white.png" />
     <Resource Include="Images\LyncUp Logo Panorama.png" />
-    <Resource Include="Images\LyncUp Logo.png" />
+    <Resource Include="Images\LyncUpLogo.png" />
     <Resource Include="Images\TileBackground.png" />
     <Resource Include="Images\Icons\beer_icon_white.png" />
     <Resource Include="Images\Icons\restaurant_icon_white.png" />
