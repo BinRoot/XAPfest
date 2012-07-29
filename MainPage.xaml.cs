@@ -37,6 +37,11 @@ namespace SmashSampleApp
     using System.IO.IsolatedStorage;
     using System.Windows.Media.Imaging;
     using System.Windows.Navigation;
+    using System.ServiceModel;
+    using System.Collections.ObjectModel;
+    using System.Text.RegularExpressions;
+
+
 
     /// <summary>
     /// 
@@ -590,6 +595,56 @@ namespace SmashSampleApp
                                  where ((Venue)x).name == ((TextBlock)((Pushpin)sender).Content).Text
                                  select x).FirstOrDefault();
             }
+
+            List<GeoCoordinate> locations = new List<GeoCoordinate>();
+
+            locations.Add(selectedVenue.location);
+            locations.Add(watcher.Position.Location);
+
+            RouteService.RouteServiceClient routeService = new RouteService.RouteServiceClient("BasicHttpBinding_IRouteService");
+
+            routeService.CalculateRouteCompleted += (sender2, e2) =>
+            {
+                var points = e2.Result.Result.RoutePath.Points;
+                var coordinates = points.Select(x => new GeoCoordinate(x.Latitude, x.Longitude));
+
+                var routeColor = Colors.Blue;
+                var routeBrush = new SolidColorBrush(routeColor);
+
+                var routeLine = new MapPolyline()
+                {
+                    Locations = new LocationCollection(),
+                    Stroke = routeBrush,
+                    Opacity = 0.65,
+                    StrokeThickness = 5.0,
+                };
+
+                foreach (var location in points)
+                {
+                    routeLine.Locations.Add(new GeoCoordinate(location.Latitude, location.Longitude));
+                }
+
+                RouteLayer.Children.Add(routeLine);
+            };
+
+            LyncUpMap.SetView(LocationRect.CreateLocationRect(locations));
+
+            routeService.CalculateRouteAsync(new RouteService.RouteRequest()
+            {
+                Credentials = new RouteService.Credentials()
+                {
+                    ApplicationId = "AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL"
+                },
+                Options = new RouteService.RouteOptions()
+                {
+                    RoutePathType = RouteService.RoutePathType.Points
+                },
+                Waypoints = new ObservableCollection<RouteService.Waypoint>(
+                    locations.Select(x => new RouteService.Waypoint()
+                    {
+                        Location = new RouteService.Location(){Latitude = x.Latitude, Longitude = x.Longitude}
+                    }))
+            }); 
 
             //So I heard you like casting...
             ((TextBlock)((Pushpin)sender).Content).Visibility = Visibility.Visible;
