@@ -263,6 +263,9 @@ namespace SmashSampleApp
                 AddOrUpdateSettings("friendid", friendid);
                 AddOrUpdateSettings("eventname", eventname);
                 AddOrUpdateSettings("eventloc", eventloc);
+
+                // TODO: plot eventloc
+
                 setUpDone();
             }
 
@@ -477,8 +480,6 @@ namespace SmashSampleApp
         {
             // MessageBox.Show("But here's my number, so call me maybe?");
 
-            //TODO: remove this dummy test code
-            // setUpDone();
         }
 
         private void RemovePerson_Button(object sender, RoutedEventArgs e)
@@ -559,9 +560,15 @@ namespace SmashSampleApp
 
         private void clearTooltips()
         {
-            if (LyncUpMap.Children.Count != 0)
+            Map m = MainMap;
+            if (InSetupMode)
             {
-                List<UIElement> pushpins = LyncUpMap.Children.ToList();
+                m = LyncUpMap;
+            }
+
+            if (m.Children.Count != 0)
+            {
+                List<UIElement> pushpins = m.Children.ToList();
 
                 foreach (var item in pushpins)
                 {
@@ -671,7 +678,14 @@ namespace SmashSampleApp
 
                 if (firstPlot)
                 {
-                    LyncUpMap.SetView(watcher.Position.Location, 12);
+                    try
+                    {
+                        LyncUpMap.SetView(watcher.Position.Location, 12);
+                    }
+                    catch (NullReferenceException)
+                    {
+                        return;
+                    }
                     firstPlot = false;
                 }
                 
@@ -715,7 +729,14 @@ namespace SmashSampleApp
 
                     foreach (var item in friendLocations)
                     {
-                        LyncUpMap.Children.Add(item);
+                        if (InSetupMode)
+                        {
+                            LyncUpMap.Children.Add(item);
+                        }
+                        else
+                        {
+                            MainMap.Children.Add(item);
+                        }
                     }
                 }
                 catch (Exception er)
@@ -878,9 +899,12 @@ namespace SmashSampleApp
 
         private void setUpDone()
         {
+            MainMap.Tap += this.map_Tap;
             AddOrUpdateSettings("setupMode", false);
             ApplicationBar.IsVisible = true;
             MainPanorama.Visibility = Visibility.Collapsed;
+
+            plotLocation();
 
             try
             {
