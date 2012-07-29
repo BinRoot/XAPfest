@@ -97,7 +97,6 @@ namespace SmashSampleApp
                 NoButton.IsEnabled = false;
                 YesButton.IsEnabled = false;
 
-                Thread.Sleep(100);
                 Yes_Button_Click(null, null);
             }
             
@@ -118,8 +117,19 @@ namespace SmashSampleApp
             PushAPI.SendToastToUser(pushkey, Title, SubTitle, DataTable, "MainPage");
 
             // NavigationService.GoBack();
+            YesButton.IsEnabled = false;
+            YesButtonText.Text = "Sending...";
+            NoButton.IsEnabled = false;
+            Thread thread1 = new Thread(new ThreadStart(GoBackLater));
+            thread1.Start();
         }
 
+        public void GoBackLater()
+        {
+            Thread.Sleep(2000);
+            System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { NavigationService.GoBack();});
+            
+        }
 
         
         public bool AddOrUpdateSettings(string Key, Object value)
