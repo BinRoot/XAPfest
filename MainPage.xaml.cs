@@ -128,6 +128,7 @@ namespace SmashSampleApp
             LyncUpMap.Tap += this.map_Tap;
             #endregion
 
+
         }
 
         public MainPage()
@@ -963,25 +964,30 @@ namespace SmashSampleApp
 
         private void InformActiveFriends()
         {
-            foreach (Friend f in DataUse.Instance.ActiveFriends)
+            if (selectedVenue != null)
             {
-                if (f.status != "no")
+                foreach (Friend f in DataUse.Instance.ActiveFriends)
                 {
-                    string title = "LyncUp";
-                    string subtitle = DataUse.Instance.MyUserName + " has chosen a place to lync up!";
-
-                    Dictionary<string, string> dataDic = new Dictionary<string,string>();
-                    dataDic["friendid"] = DataUse.Instance.MyUserId;
-                    dataDic["eventname"] = "event name...";
-                    dataDic["eventloc"] = "3"+ "," +"4";
-
-                    if (f.pushkey != "")
+                    if (f.status != "no")
                     {
-                        PushAPI.SendToastToUser(f.pushkey, title, subtitle, dataDic, "MainPage");
+                        string title = "LyncUp";
+                        string subtitle = DataUse.Instance.MyUserName + " is ready to go! ...";
+
+
+                        Dictionary<string, string> dataDic = new Dictionary<string, string>();
+                        dataDic["friendid"] = DataUse.Instance.MyUserId;
+                        dataDic["eventname"] = selectedVenue.name;
+                        dataDic["eventloc"] = selectedVenue.location.Latitude + "," + selectedVenue.location.Longitude;
+
+                        if (f.pushkey != "")
+                        {
+                            PushAPI.SendToastToUser(f.pushkey, title, subtitle, dataDic, "MainPage");
+                        }
+
                     }
-                    
                 }
             }
+
         }
     }
 }

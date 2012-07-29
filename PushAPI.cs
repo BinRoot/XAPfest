@@ -86,7 +86,6 @@ namespace SmashSampleApp
 
         private static void GetResponseCallback(IAsyncResult asynchronousResult)
         {
-
             try
             {
                 HttpWebRequest request = (HttpWebRequest)asynchronousResult.AsyncState;
@@ -109,6 +108,7 @@ namespace SmashSampleApp
             {
                 Debug.WriteLine("PUSH ERR: " + e.Message);
             }
+
         }
     }
 }
