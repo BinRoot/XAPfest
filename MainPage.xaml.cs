@@ -464,7 +464,8 @@ namespace SmashSampleApp
 
         private void TransportationPanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            MessageBox.Show("I just met you");
+            BingAPICall call = new BingAPICall(new GeoCoordinate(47.605353, -122.327641), new GeoCoordinate(47.63895, -122.322609));
+            call.GetData();
         }
 
         private void RadiusPanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -600,6 +601,8 @@ namespace SmashSampleApp
 
             locations.Add(selectedVenue.location);
             locations.Add(watcher.Position.Location);
+
+            RouteLayer.Children.Clear();
 
             RouteService.RouteServiceClient routeService = new RouteService.RouteServiceClient("BasicHttpBinding_IRouteService");
 

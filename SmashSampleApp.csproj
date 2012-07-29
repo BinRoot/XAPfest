@@ -105,6 +105,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BingAPICall.cs" />
     <Compile Include="ChatRecord.cs" />
     <Compile Include="Converter\FriendsListConverter.cs" />
     <Compile Include="Converter\VegetarianFormattingConverter.cs" />
