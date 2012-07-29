@@ -10,6 +10,14 @@
                     maxReceivedMessageSize="2147483647">
                     <security mode="None" />
                 </binding>
+                <binding name="BasicHttpBinding_IGeocodeService1" maxBufferSize="2147483647"
+                    maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+                <binding name="BasicHttpBinding_IRouteService1" maxBufferSize="2147483647"
+                    maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
             </basicHttpBinding>
             <customBinding>
                 <binding name="CustomBinding_IGeocodeService">
@@ -17,6 +25,14 @@
                     <httpTransport maxReceivedMessageSize="2147483647" maxBufferSize="2147483647" />
                 </binding>
                 <binding name="CustomBinding_IRouteService">
+                    <binaryMessageEncoding />
+                    <httpTransport maxReceivedMessageSize="2147483647" maxBufferSize="2147483647" />
+                </binding>
+                <binding name="CustomBinding_IGeocodeService1">
+                    <binaryMessageEncoding />
+                    <httpTransport maxReceivedMessageSize="2147483647" maxBufferSize="2147483647" />
+                </binding>
+                <binding name="CustomBinding_IRouteService1">
                     <binaryMessageEncoding />
                     <httpTransport maxReceivedMessageSize="2147483647" maxBufferSize="2147483647" />
                 </binding>
@@ -35,6 +51,18 @@
             <endpoint address="http://dev.virtualearth.net/webservices/v1/routeservice/routeservice.svc/binaryHttp"
                 binding="customBinding" bindingConfiguration="CustomBinding_IRouteService"
                 contract="RouteService.IRouteService" name="CustomBinding_IRouteService" />
+            <endpoint address="http://dev.virtualearth.net/webservices/v1/geocodeservice/GeocodeService.svc"
+                binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IGeocodeService1"
+                contract="GeocodeService.IGeocodeService" name="BasicHttpBinding_IGeocodeService1" />
+            <endpoint address="http://dev.virtualearth.net/webservices/v1/geocodeservice/GeocodeService.svc/binaryHttp"
+                binding="customBinding" bindingConfiguration="CustomBinding_IGeocodeService1"
+                contract="GeocodeService.IGeocodeService" name="CustomBinding_IGeocodeService1" />
+            <endpoint address="http://dev.virtualearth.net/webservices/v1/routeservice/routeservice.svc"
+                binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IRouteService1"
+                contract="RouteService.IRouteService" name="BasicHttpBinding_IRouteService1" />
+            <endpoint address="http://dev.virtualearth.net/webservices/v1/routeservice/routeservice.svc/binaryHttp"
+                binding="customBinding" bindingConfiguration="CustomBinding_IRouteService1"
+                contract="RouteService.IRouteService" name="CustomBinding_IRouteService1" />
         </client>
     </system.serviceModel>
 </configuration>

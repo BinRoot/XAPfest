@@ -190,6 +190,7 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <Content Include="ServiceReferences.ClientConfig" />
+    <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\GeocodeService\Arrays.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -210,13 +211,6 @@
     <None Include="Service References\GeocodeService\SmashSampleApp.GeocodeService.GeocodeResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\RouteService\configuration91.svcinfo" />
-    <None Include="Service References\RouteService\configuration.svcinfo" />
-    <None Include="Service References\RouteService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\RouteService\common.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -267,12 +261,6 @@
     <Resource Include="Images\Icons\service_icon_white.png" />
     <Resource Include="Images\Icons\shopping_icon_white.png" />
     <Content Include="Microsoft.Hawaii.Smash.Client.dll" />
-    <None Include="Service References\GeocodeService\configuration91.svcinfo" />
-    <None Include="Service References\GeocodeService\configuration.svcinfo" />
-    <None Include="Service References\GeocodeService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
