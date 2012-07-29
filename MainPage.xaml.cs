@@ -673,10 +673,10 @@ namespace SmashSampleApp
             clearMap(typeof(Object));
 
 
-            DataUse.Instance.MessageToSend = DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude;
+            DataUse.Instance.MessageToSend = DataUse.Instance.MyUserName +"," + DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude;
             if (DataUse.Instance.RoomCreated && DataUse.Instance.ActiveLocationMode)
             {
-                SendText(DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude);
+                SendText(DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude);
             }
             
         }
@@ -739,16 +739,8 @@ namespace SmashSampleApp
 
                     foreach (var id in friendMap.Keys)
                     {
-                        Friend f = null;
-                        foreach (var friend in DataUse.Instance.ActiveFriends)
-                        {
-                            if (id.Equals(friend.id))
-                            {
-                                f = friend;
-                            }
-                        }
-
-                        GeoCoordinate loc = friendMap[f.id];
+                        
+                        GeoCoordinate loc = friendMap[id];
 
 
                         //MessageBox.Show("displaying " + f.id + ": " + loc.Latitude + ", " + loc.Longitude);
@@ -764,7 +756,7 @@ namespace SmashSampleApp
                         locationPushpin.Tap += this.pin_Tap;
 
                         locationPushpin.Content = new TextBlock();
-                        ((TextBlock)locationPushpin.Content).Text = f.name;
+                        ((TextBlock)locationPushpin.Content).Text = friendIdToNameMap[id];
                         ((TextBlock)locationPushpin.Content).Visibility = Visibility.Collapsed;
 
                         friendLocations.Add(locationPushpin);
@@ -880,7 +872,7 @@ namespace SmashSampleApp
             }
         }
 
-
+        Dictionary<string, string> friendIdToNameMap = new Dictionary<string, string>();
         private void ChatText_LayoutUpdated(object sender, EventArgs e)
         {
             SmashTable<Channels.ChatRecord> v = (SmashTable<Channels.ChatRecord>)ChatText.DataContext;
@@ -892,12 +884,15 @@ namespace SmashSampleApp
                     string newMessage = v[v.Count - 1].ChatEntry;
                     
                     string [] strSplit = newMessage.Split(',');
-                    if (strSplit.Length == 3)
+                    if (strSplit.Length == 4)
                     {
                         // MessageBox.Show("msg received: " + newMessage);
-                        string friendid = strSplit[0].Replace("(): ", "").TrimStart();
-                        string latStr = strSplit[1];
-                        string lonStr = strSplit[2];
+                        string friendname = strSplit[0].Replace("(): ", "").TrimStart();
+                        string friendid = strSplit[1];
+                        string latStr = strSplit[2];
+                        string lonStr = strSplit[3];
+
+                        friendIdToNameMap[friendid] = friendname;
 
                         try 
                         {
