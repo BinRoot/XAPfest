@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{7a46e8fd-f8a6-460c-8b8d-222d508b8351}" Title="Hawaii Smash" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="MeetingSpacePhone author" Description="Sample description" Publisher="MeetingSpacePhone">
-    <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
+  <App xmlns="" ProductID="{7a46e8fd-f8a6-460c-8b8d-222d508b8351}" Title="LyncUp" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="MeetingSpacePhone author" Description="Sample description" Publisher="MeetingSpacePhone">
+    <IconPath IsRelative="true" IsResource="false">Images/Icons/ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_GAMERSERVICES" />
       <Capability Name="ID_CAP_IDENTITY_DEVICE" />
@@ -24,9 +24,9 @@
     <Tokens>
       <PrimaryToken TokenID="MeetingSpacePhoneToken" TaskName="_default">
         <TemplateType5>
-          <BackgroundImageURI IsRelative="true" IsResource="false">Background.png</BackgroundImageURI>
+          <BackgroundImageURI IsRelative="true" IsResource="false">Images\Icons\TileIcon.png</BackgroundImageURI>
           <Count>0</Count>
-          <Title>Hawaii Smash</Title>
+          <Title>LyncUp</Title>
         </TemplateType5>
       </PrimaryToken>
     </Tokens>

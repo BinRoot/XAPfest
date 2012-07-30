@@ -105,6 +105,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BingAPICall.cs" />
     <Compile Include="ChatRecord.cs" />
     <Compile Include="Converter\FriendsListConverter.cs" />
     <Compile Include="Converter\VegetarianFormattingConverter.cs" />
@@ -189,6 +190,8 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Resource Include="Images\Icons\ApplicationIcon.png" />
+    <Resource Include="Images\Icons\TileIcon.png" />
     <Content Include="ServiceReferences.ClientConfig" />
     <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\GeocodeService\Arrays.xsd">
