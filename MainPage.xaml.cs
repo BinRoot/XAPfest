@@ -626,6 +626,16 @@ namespace SmashSampleApp
                                      select x).FirstOrDefault();
 
                     goButton.IsEnabled = true;
+
+                    foreach (var friend in DataUse.Instance.ActiveFriends)
+	                {
+                        //BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, friend.transportation, this);
+                        BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, "bike", this, friend);
+                        
+                        call.GetData();
+	                }
+                    FinalizeList.DataContext = null;
+                    FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
                 }
 
                 List<GeoCoordinate> locations = new List<GeoCoordinate>();
