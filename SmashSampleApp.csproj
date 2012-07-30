@@ -197,6 +197,7 @@
     <Resource Include="Images\Icons\TileIcon.png" />
     <Content Include="Images\Icons\back_icon.png" />
     <Content Include="Images\Icons\search_icon.png" />
+    <Resource Include="Images\Icons\ApplicationIconLetters.png" />
     <Content Include="ServiceReferences.ClientConfig" />
     <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\GeocodeService\Arrays.xsd">
