@@ -190,6 +190,8 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Resource Include="Images\Icons\ApplicationIcon.png" />
+    <Resource Include="Images\Icons\TileIcon.png" />
     <Content Include="ServiceReferences.ClientConfig" />
     <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\GeocodeService\Arrays.xsd">
