@@ -27,6 +27,14 @@ namespace SmashSampleApp.Model
             }
         }
 
+        public Uri ImgUri
+        {
+            get
+            {
+                return new Uri("https://apis.live.net/v5.0/" + id + "/picture", UriKind.Absolute);
+            }
+        }
+
 
         public Friend(string name, string id, string pushkey)
         {

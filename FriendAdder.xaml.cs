@@ -111,6 +111,7 @@ namespace SmashSampleApp
             DataTable["eventid"] = EventId;
             DataTable["friendid"] = FriendId;
             DataTable["myid"] = f.id;
+            DataTable["myname"] = f.name;
 
             PushAPI.SendToastToUser(f.pushkey, Title, SubTitle, DataTable, "InvitationPage");
 

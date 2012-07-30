@@ -26,6 +26,7 @@ namespace SmashSampleApp
         string friend;
         string friendid;
         string myid;
+        string myname;
 
         MainPage MP;
         IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
@@ -41,21 +42,25 @@ namespace SmashSampleApp
             if (this.NavigationContext.QueryString.ContainsKey("eventid")
                 && this.NavigationContext.QueryString.ContainsKey("friend")
                 && this.NavigationContext.QueryString.ContainsKey("friendid")
-                && this.NavigationContext.QueryString.ContainsKey("myid"))
+                && this.NavigationContext.QueryString.ContainsKey("myid")
+                && this.NavigationContext.QueryString.ContainsKey("myname"))
             {
                 eventid = this.NavigationContext.QueryString["eventid"];
                 friend = this.NavigationContext.QueryString["friend"];
                 friendid = this.NavigationContext.QueryString["friendid"];
                 myid = this.NavigationContext.QueryString["myid"];
+                myname = this.NavigationContext.QueryString["myname"];
 
                 AddOrUpdateSettings("eventid", eventid);
                 AddOrUpdateSettings("friend", friend);
                 AddOrUpdateSettings("friendid", friendid);
                 AddOrUpdateSettings("myid", myid);
+                AddOrUpdateSettings("myname", myname);
                 AddOrUpdateSettings("ready", false);
                 AddOrUpdateSettings("setupMode", false);
 
                 DataUse.Instance.MyUserId = myid;
+                DataUse.Instance.MyUserName = myname;
                 PageTitle.Text = friend;
 
                 

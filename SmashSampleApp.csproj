@@ -249,7 +249,7 @@
     <Resource Include="Images\Icons\name_icon.png" />
     <Resource Include="Images\Icons\name_icon_white.png" />
     <Resource Include="Images\Icons\plus_icon.png" />
-    <Resource Include="Images\Icons\radius_icon.png" />
+    <Content Include="Images\Icons\radius_icon.png" />
     <Resource Include="Images\Icons\radius_icon_white.png" />
     <Resource Include="Images\Icons\update_icon.png" />
     <Resource Include="Images\Icons\update_icon_white.png" />

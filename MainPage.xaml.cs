@@ -82,7 +82,9 @@ namespace SmashSampleApp
         private bool firstPlot = true;
         public List<Venue> venues;
         public Venue selectedVenue = null;
-
+        bool firstTimeLaunch = true;
+        double currentLat = 0.0;
+        double currentLon = 0.0;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -180,7 +182,7 @@ namespace SmashSampleApp
             DS = new DataService(this);
             DataUse.Instance.DS = DS;
             DataUse.Instance.DS.GetFriends(DataUse.Instance.MyUserId, DataUse.Instance.MyUserName);
-            DataUse.Instance.DS.GetNextEventId();
+            
             // Set the data context of the listbox control to the sample data
            
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
@@ -256,6 +258,9 @@ namespace SmashSampleApp
             FinalizeList.DataContext = null;
             FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
 
+            FriendsOnMapList.DataContext = null;
+            FriendsOnMapList.DataContext = DataUse.Instance.ActiveFriends;
+
             if (this.NavigationContext.QueryString.ContainsKey("friendid")
                 && this.NavigationContext.QueryString.ContainsKey("eventname")
                 && this.NavigationContext.QueryString.ContainsKey("eventloc"))
@@ -269,10 +274,31 @@ namespace SmashSampleApp
                 AddOrUpdateSettings("eventname", eventname);
                 AddOrUpdateSettings("eventloc", eventloc);
 
+                try
+                {
+                    DataUse.Instance.MyUserName = (string)settings["myname"];
+                    DataUse.Instance.MyUserId = (string)settings["myid"];
+                }
+                catch (Exception err)
+                {
+                    MessageBox.Show("onnav err: " + err.Message);
+                }
+
+
+
+
                 // TODO: plot eventloc
+
+                JoinMeeting((string)settings["eventid"]);
 
                 setUpDone();
             }
+            else if(firstTimeLaunch)
+            {
+                DataUse.Instance.DS.GetNextEventId();
+            }
+
+            firstTimeLaunch = false;
 
             base.OnNavigatedTo(e);
         }
@@ -484,7 +510,7 @@ namespace SmashSampleApp
         private void UpdatePanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             // MessageBox.Show("But here's my number, so call me maybe?");
-
+            
         }
 
         private void RemovePerson_Button(object sender, RoutedEventArgs e)
@@ -589,62 +615,67 @@ namespace SmashSampleApp
         {
             clearTooltips();
 
-            if (venues != null)
+            try
             {
-                selectedVenue = (from x in venues
-                                 where ((Venue)x).name == ((TextBlock)((Pushpin)sender).Content).Text
-                                 select x).FirstOrDefault();
-            }
-
-            List<GeoCoordinate> locations = new List<GeoCoordinate>();
-
-            locations.Add(selectedVenue.location);
-            locations.Add(watcher.Position.Location);
-
-            RouteService.RouteServiceClient routeService = new RouteService.RouteServiceClient("BasicHttpBinding_IRouteService");
-
-            routeService.CalculateRouteCompleted += (sender2, e2) =>
-            {
-                var points = e2.Result.Result.RoutePath.Points;
-                var coordinates = points.Select(x => new GeoCoordinate(x.Latitude, x.Longitude));
-
-                var routeColor = Colors.Blue;
-                var routeBrush = new SolidColorBrush(routeColor);
-
-                var routeLine = new MapPolyline()
+                if (venues != null)
                 {
-                    Locations = new LocationCollection(),
-                    Stroke = routeBrush,
-                    Opacity = 0.65,
-                    StrokeThickness = 5.0,
-                };
-
-                foreach (var location in points)
-                {
-                    routeLine.Locations.Add(new GeoCoordinate(location.Latitude, location.Longitude));
+                    selectedVenue = (from x in venues
+                                     where ((Venue)x).name == ((TextBlock)((Pushpin)sender).Content).Text
+                                     select x).FirstOrDefault();
                 }
 
-                RouteLayer.Children.Add(routeLine);
-            };
+                List<GeoCoordinate> locations = new List<GeoCoordinate>();
 
-            LyncUpMap.SetView(LocationRect.CreateLocationRect(locations));
+                locations.Add(selectedVenue.location);
+                locations.Add(watcher.Position.Location);
 
-            routeService.CalculateRouteAsync(new RouteService.RouteRequest()
-            {
-                Credentials = new RouteService.Credentials()
+                RouteService.RouteServiceClient routeService = new RouteService.RouteServiceClient("BasicHttpBinding_IRouteService");
+
+                routeService.CalculateRouteCompleted += (sender2, e2) =>
                 {
-                    ApplicationId = "AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL"
-                },
-                Options = new RouteService.RouteOptions()
-                {
-                    RoutePathType = RouteService.RoutePathType.Points
-                },
-                Waypoints = new ObservableCollection<RouteService.Waypoint>(
-                    locations.Select(x => new RouteService.Waypoint()
+                    var points = e2.Result.Result.RoutePath.Points;
+                    var coordinates = points.Select(x => new GeoCoordinate(x.Latitude, x.Longitude));
+
+                    var routeColor = Colors.Blue;
+                    var routeBrush = new SolidColorBrush(routeColor);
+
+                    var routeLine = new MapPolyline()
                     {
-                        Location = new RouteService.Location(){Latitude = x.Latitude, Longitude = x.Longitude}
-                    }))
-            }); 
+                        Locations = new LocationCollection(),
+                        Stroke = routeBrush,
+                        Opacity = 0.65,
+                        StrokeThickness = 5.0,
+                    };
+
+                    foreach (var location in points)
+                    {
+                        routeLine.Locations.Add(new GeoCoordinate(location.Latitude, location.Longitude));
+                    }
+
+                    RouteLayer.Children.Add(routeLine);
+                };
+
+                LyncUpMap.SetView(LocationRect.CreateLocationRect(locations));
+
+                routeService.CalculateRouteAsync(new RouteService.RouteRequest()
+                {
+                    Credentials = new RouteService.Credentials()
+                    {
+                        ApplicationId = "AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL"
+                    },
+                    Options = new RouteService.RouteOptions()
+                    {
+                        RoutePathType = RouteService.RoutePathType.Points
+                    },
+                    Waypoints = new ObservableCollection<RouteService.Waypoint>(
+                        locations.Select(x => new RouteService.Waypoint()
+                        {
+                            Location = new RouteService.Location() { Latitude = x.Latitude, Longitude = x.Longitude }
+                        }))
+                });
+            }
+            catch { };
+             
 
             //So I heard you like casting...
             ((TextBlock)((Pushpin)sender).Content).Visibility = Visibility.Visible;
@@ -656,36 +687,50 @@ namespace SmashSampleApp
             clearTooltips();
         }
 
-        private void clearMap(Type t)
+        private void clearMap(Type t, Map m)
         {
             //Add logic only to remove location pins versus venue pins
             if (LyncUpMap.Children.Count != 0)
             {
-                List<UIElement> pushpins = LyncUpMap.Children.ToList();
+                List<UIElement> pushpins = m.Children.ToList();
 
                 foreach (var item in pushpins)
                 {
                     if (item != null && t == item.GetType())
                     {
-                        LyncUpMap.Children.Remove(item);
+                        m.Children.Remove(item);
                     }
                 }
             }
         }
 
-        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+
+        public void positionChanged(double lat, double lon) 
         {
-            LyncUpMap.Center = new GeoCoordinate(e.Position.Location.Latitude, e.Position.Location.Longitude);
+            LyncUpMap.Center = new GeoCoordinate(lat, lon);
 
-            clearMap(typeof(Object));
+            clearMap(typeof(Object), LyncUpMap);
 
 
-            DataUse.Instance.MessageToSend = DataUse.Instance.MyUserName +"," + DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude;
+            DataUse.Instance.MessageToSend = DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + lat + "," + lon;
             if (DataUse.Instance.RoomCreated && DataUse.Instance.ActiveLocationMode)
             {
-                SendText(DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + e.Position.Location.Latitude + "," + e.Position.Location.Longitude);
+                //MessageBox.Show("sending: " + DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + lat + "," + lon);
+                SendText(DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + lat + "," + lon);
             }
-            
+            else
+            {
+                //MessageBox.Show(DataUse.Instance.MyUserName + " loc changed, but not sent, " + DataUse.Instance.RoomCreated + "-" + DataUse.Instance.ActiveLocationMode);
+            }
+
+        }
+
+        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        {
+            currentLat = e.Position.Location.Latitude;
+            currentLon = e.Position.Location.Longitude;
+
+            positionChanged(e.Position.Location.Latitude, e.Position.Location.Longitude);
         }
 
         private void drawCircle(GeoCoordinate center, double radius)
@@ -729,7 +774,8 @@ namespace SmashSampleApp
         {
             if (DataUse.Instance.ActiveLocationMode)
             {
-                clearMap(typeof(MapPolygon));
+                clearMap(typeof(MapPolygon), LyncUpMap);
+                clearMap(typeof(Pushpin), LyncUpMap);
 
                 if (firstPlot)
                 {
@@ -782,17 +828,23 @@ namespace SmashSampleApp
                         drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), (int)selector.DataSource.SelectedItem * 1609.34);
                     }
 
+                    clearMap(typeof(Pushpin), MainMap);
+
                     foreach (var item in friendLocations)
                     {
                         if (InSetupMode)
                         {
+                            
                             LyncUpMap.Children.Add(item);
                         }
                         else
                         {
-                            MainMap.Children.Add(item);
+                            MainMap.Children.Add(item);  
                         }
                     }
+
+                    MainMap.SetView(LocationRect.CreateLocationRect(friendLocations.Select(x => x.Location)));
+                    MainMap.ZoomLevel = MainMap.ZoomLevel + 0.00001;
                 }
                 catch (Exception er)
                 {
@@ -805,7 +857,7 @@ namespace SmashSampleApp
 
         private void FoodButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap(typeof(Pushpin));
+            clearMap(typeof(Pushpin), LyncUpMap);
 
             plotLocation();
 
@@ -820,7 +872,7 @@ namespace SmashSampleApp
 
         private void BarsButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap(typeof(Pushpin));
+            clearMap(typeof(Pushpin), LyncUpMap);
 
             plotLocation();
 
@@ -835,7 +887,7 @@ namespace SmashSampleApp
 
         private void ShoppingButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap(typeof(Pushpin));
+            clearMap(typeof(Pushpin), LyncUpMap);
 
             plotLocation();
 
@@ -850,7 +902,7 @@ namespace SmashSampleApp
 
         private void AttractionsButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap(typeof(Pushpin));
+            clearMap(typeof(Pushpin), LyncUpMap);
 
             plotLocation();
 
@@ -865,7 +917,7 @@ namespace SmashSampleApp
 
         private void ServiceButton_Click(object sender, RoutedEventArgs e)
         {
-            clearMap(typeof(Pushpin));
+            clearMap(typeof(Pushpin), LyncUpMap);
 
             plotLocation();
 
@@ -893,6 +945,7 @@ namespace SmashSampleApp
             }
         }
 
+        bool smashScanned = false;
         Dictionary<string, string> friendIdToNameMap = new Dictionary<string, string>();
         private void ChatText_LayoutUpdated(object sender, EventArgs e)
         {
@@ -902,53 +955,97 @@ namespace SmashSampleApp
             {
                 if (v.Count != 0)
                 {
-                    string newMessage = v[v.Count - 1].ChatEntry;
-                    
-                    string [] strSplit = newMessage.Split(',');
-                    if (strSplit.Length == 4)
+
+                    if (!smashScanned)
                     {
-                        // MessageBox.Show("msg received: " + newMessage);
-                        string friendname = strSplit[0].Replace("(): ", "").TrimStart();
-                        string friendid = strSplit[1];
-                        string latStr = strSplit[2];
-                        string lonStr = strSplit[3];
-
-                        friendIdToNameMap[friendid] = friendname;
-
-                        try 
+                        for (int i = 0; i < v.Count; i++)
                         {
-                            double latd = double.Parse(latStr);
-                            double lond = double.Parse(lonStr);
-                            GeoCoordinate g = new GeoCoordinate(latd, lond);
-
-                            try
-                            {
-                                GeoCoordinate oldLoc = friendMap[friendid];
-
-                                if (oldLoc != g)
-                                {
-                                    friendMap[friendid] = g;
-                                    friendLocationUpdated();
-                                }
-                            }
-                            catch // not found
-                            {
-                                friendMap[friendid] = g;
-                                friendLocationUpdated();
-                            }
-     
+                            string oldMessageEntry = v[i].ChatEntry;
+                            readMessage(oldMessageEntry);
                         }
-                        catch(Exception er) 
-                        {
-                            MessageBox.Show("**" + er.Message);
-                        }
-                        
+
+                        smashScanned = true;
                     }
                     else
                     {
-                        MessageBox.Show("msg received, but incorrect format: " + newMessage);
+                        string newMessage = v[v.Count - 1].ChatEntry;
+                        readMessage(newMessage);
                     }
                 }
+            }
+        }
+
+        private void readMessage(string newMessage)
+        {
+            string[] strSplit = newMessage.Split(',');
+            if (strSplit.Length == 4)
+            {
+                // MessageBox.Show("msg received: " + newMessage);
+                string friendname = strSplit[0].Replace("(): ", "").TrimStart();
+                string friendid = strSplit[1];
+                string latStr = strSplit[2];
+                string lonStr = strSplit[3];
+
+
+                // TODO: this is working...
+                bool found = false;
+                foreach (Friend fa in DataUse.Instance.ActiveFriends)
+                {
+                    if (fa.id == friendid)
+                    {
+                        found = true;
+                        //MessageBox.Show("found "+fa.name +", ActiveFriends size: "+DataUse.Instance.ActiveFriends.Count);
+                        break;
+                    }
+                }
+                if (!found)
+                {
+
+                    Friend fa = new Friend(friendname, friendid, "");
+                    DataUse.Instance.ActiveFriends.Add(fa);
+
+                    FriendsOnMapList.DataContext = null;
+                    FriendsOnMapList.DataContext = DataUse.Instance.ActiveFriends;
+
+                    //MessageBox.Show("didn't find " + friendid +", ActiveFriends size: "+DataUse.Instance.ActiveFriends.Count);
+
+                }
+
+
+                friendIdToNameMap[friendid] = friendname;
+
+                try
+                {
+                    double latd = double.Parse(latStr);
+                    double lond = double.Parse(lonStr);
+                    GeoCoordinate g = new GeoCoordinate(latd, lond);
+
+                    try
+                    {
+                        GeoCoordinate oldLoc = friendMap[friendid];
+
+                        if (oldLoc != g)
+                        {
+                            friendMap[friendid] = g;
+                            friendLocationUpdated();
+                        }
+                    }
+                    catch // not found
+                    {
+                        friendMap[friendid] = g;
+                        friendLocationUpdated();
+                    }
+
+                }
+                catch (Exception er)
+                {
+                    MessageBox.Show("**" + er.Message);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("msg received, but incorrect format: " + newMessage);
             }
         }
 
@@ -967,6 +1064,8 @@ namespace SmashSampleApp
                 if (isReady)
                 {
                     MainMap.Visibility = Visibility.Visible;
+                    DebugButtons.Visibility = Visibility.Visible;
+                    FriendsOnMapList.Visibility = Visibility.Visible;
                     NotReadyText.Visibility = Visibility.Collapsed;
 
                     string eventname = (string)settings["eventname"];
@@ -1018,6 +1117,7 @@ namespace SmashSampleApp
 
         private void friendLocationUpdated()
         {
+            MessageBox.Show("friend location updated");
             plotLocation();
         }
 
@@ -1027,6 +1127,8 @@ namespace SmashSampleApp
             AddOrUpdateSettings("setupMode", true);
             MainPanorama.Visibility = Visibility.Visible;
             MainMap.Visibility = Visibility.Collapsed;
+            DebugButtons.Visibility = Visibility.Collapsed;
+            FriendsOnMapList.Visibility = Visibility.Collapsed;
             ApplicationBar.IsVisible = false;
 
         }
@@ -1064,6 +1166,18 @@ namespace SmashSampleApp
                 }
             }
 
+        }
+
+        private void Button_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            currentLat = currentLat - 0.001;
+            positionChanged(currentLat - 0.001, currentLon);
+        }
+
+        private void Button_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            currentLat = currentLat + 0.001;
+            positionChanged(currentLat + 0.001, currentLon);
         }
     }
 }

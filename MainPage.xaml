@@ -26,12 +26,47 @@
 
     <Grid x:Name="LayoutRoot" Background="Transparent">
 
-        <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
+        <!-- A listbox hack for Hawaii Smash -->
+        <ListBox LayoutUpdated="ChatText_LayoutUpdated" Name="ChatText" ItemsSource="{Binding}" Width="1" Height="1" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="300"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Path=Picture}" Width="100" Height="100" Grid.Column="0" />
+                        <ContentControl Content="{Binding Path=Text}" Grid.Column="1"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Collapsed" Name="DebugButtons">
+            <Button Content="&lt;--" Height="50" Tap="Button_Tap"/>
+            <Button Content="--&gt;" Height="50" Tap="Button_Tap_1"/>
+        </StackPanel>
+        
+        <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,50,0,0" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
+       
         <toolkit2:LoopingSelector Visibility="Collapsed" x:Name="selector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemMargin="2,3,3,2" ItemSize="100,100"/>
 
 
         <TextBlock Name="NotReadyText" Visibility="Collapsed" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
+        <ListBox Visibility="Collapsed" Name="FriendsOnMapList" ItemsSource="{Binding}" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Image Width="100" Height="100" Source="{Binding ImgSrc}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <!--Panorama control-->
         <controls:Panorama Title="" Name="MainPanorama">
@@ -89,21 +124,7 @@
                 <!--Double line list with image placeholder and text wrapping-->
                 <StackPanel Orientation="Vertical">
 
-                    <!-- A listbox hack for Hawaii Smash -->
-                    <ListBox LayoutUpdated="ChatText_LayoutUpdated" Name="ChatText" ItemsSource="{Binding}" Width="1" Height="1" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="300"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Source="{Binding Path=Picture}" Width="100" Height="100" Grid.Column="0" />
-                                    <ContentControl Content="{Binding Path=Text}" Grid.Column="1"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    
                     <TextBox Visibility="Collapsed" x:Name="TextEntry" Width="400" Height="80"/>
 
                     <ListBox Name="PeopleList" ItemsSource="{Binding}">
@@ -138,6 +159,12 @@
             <controls:PanoramaItem Header="map">
                 <StackPanel Orientation="Vertical">
 
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="&lt;--" Height="50" Tap="Button_Tap"/>
+                        <Button Content="--&gt;" Height="50" Tap="Button_Tap_1"/>
+                    </StackPanel>
+                    
+                    
                     <my:Map Height="350" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" HorizontalAlignment="Center" Name="LyncUpMap" VerticalAlignment="Center" Width="400" >
                         <my:MapPolygon Fill="#99FF0000" Stroke="Red"
                         StrokeThickness="1"
@@ -145,8 +172,6 @@
                         x:Name="enclosing" />
                         <my:MapLayer x:Name="RouteLayer" />
                     </my:Map>
-
-
 
                     <StackPanel Orientation="Horizontal" MaxHeight="100" HorizontalAlignment="Center">
                         <Button Height="100" HorizontalAlignment="Center" Name="CoffeeButton" VerticalAlignment="Center" Width="100" Click="FoodButton_Click">
@@ -194,8 +219,8 @@
     <!--Sample code showing usage of ApplicationBar-->
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/Icons/plus_icon.png" Text="Button 1"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/Icons/radius_icon.png" Text="Button 2"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
                 <shell:ApplicationBarMenuItem Text="Leave this lync up" Click="Leave_MenuItem_Click"/>
