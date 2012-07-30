@@ -49,9 +49,6 @@
 
         <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,50,0,0" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
 
-        <toolkit2:LoopingSelector Visibility="Collapsed" x:Name="selector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemMargin="2,3,3,2" ItemSize="100,100"/>
-
-
         <TextBlock Name="NotReadyText" Visibility="Collapsed" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
         <ListBox Visibility="Collapsed" Name="FriendsOnMapList" ItemsSource="{Binding}" VerticalAlignment="Bottom" HorizontalAlignment="Center">
@@ -92,10 +89,10 @@
                     </StackPanel>
                     <StackPanel Margin="0,40,-12,0" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="TransportationPanel" Tap="TransportationPanel_Tap" VerticalAlignment="Stretch">
-                            <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/bike_icon_white.png" Margin="12,0,9,0"/>
+                            <Image Name="TransportationOption" Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/car_icon_white.png" Margin="12,0,9,0"/>
                             <StackPanel Width="311">
                                 <TextBlock Text="transportation"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
-                                <TextBlock Text="bike" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
+                                <TextBlock Name="TransportationText" Text="car" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -103,7 +100,7 @@
                             <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/radius_icon_white.png" Margin="12,0,9,0"/>
                             <StackPanel Width="311">
                                 <TextBlock Text="meetup radius"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
-                                <TextBlock Name="radiusText" Text="2 miles" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
+                                <TextBlock Name="radiusText" Text="1 mile" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
                             </StackPanel>
                         </StackPanel>
 

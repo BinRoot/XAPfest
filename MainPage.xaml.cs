@@ -82,6 +82,7 @@ namespace SmashSampleApp
         private bool firstPlot = true;
         public List<Venue> venues;
         public Venue selectedVenue = null;
+        public List<string> transportationOptions = new List<string>(){ "car", "bike", "walk" };
         bool firstTimeLaunch = true;
         double currentLat = 0.0;
         double currentLon = 0.0;
@@ -141,8 +142,6 @@ namespace SmashSampleApp
         public MainPage()
         {
             this.InitializeComponent();
-
-            selector.DataSource = new IntLoopingDataSource() { MinValue = 1, MaxValue = 5, SelectedItem = 1 };
 
             this.VerifyHawaiiId();
 
@@ -249,7 +248,8 @@ namespace SmashSampleApp
             }
             #endregion
 
-
+            settings["transportationMode"] = "car";
+            settings["radius"] = 1;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -490,21 +490,28 @@ namespace SmashSampleApp
 
         private void TransportationPanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            BingAPICall call = new BingAPICall(new GeoCoordinate(47.605353, -122.327641), new GeoCoordinate(47.63895, -122.322609));
-            call.GetData();
+            settings["transportationMode"] = transportationOptions[(transportationOptions.IndexOf((string)settings["transportationMode"]) + 1) % 3];
+            switch ((string)settings["transportationMode"])
+            {
+                case "bike":
+                    TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/bike_icon_white.png", UriKind.Relative));
+                    break;
+                case "car":
+                    TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/car_icon_white.png", UriKind.Relative));
+                    break;
+                case "walk":
+                    TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/walk_icon_white.png", UriKind.Relative));
+                    break;
+                default:
+                    break;
+            }
+            TransportationText.Text = (string)settings["transportationMode"];
         }
 
         private void RadiusPanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            MainPanorama.Visibility = Visibility.Collapsed;
-            selector.Visibility = Visibility.Visible;
-            selector.DataSource.SelectionChanged += new EventHandler<SelectionChangedEventArgs>(DataSource_SelectionChanged);
-        }
-
-        void DataSource_SelectionChanged(object sender, SelectionChangedEventArgs args)
-        {
-            radiusText.Text = selector.DataSource.SelectedItem + " miles";
-            MainPanorama.Visibility = Visibility.Visible;
+            settings["radius"] = ((int)settings["radius"] % 10) + 1;
+            radiusText.Text = (int)settings["radius"] + ((int)settings["radius"] != 1 ? " miles" : " mile");
             plotLocation();
         }
 
@@ -827,7 +834,7 @@ namespace SmashSampleApp
                     //Pick up radius from settings
                     if (!(averageLat == 0.0) && !(averageLong == 0.0))
                     {
-                        drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), (int)selector.DataSource.SelectedItem * 1609.34);
+                        drawCircle(new GeoCoordinate(averageLat / friendLocations.Count, averageLong / friendLocations.Count), (int)settings["radius"] * 1609.34);
                     }
 
                     clearMap(typeof(Pushpin), MainMap);
