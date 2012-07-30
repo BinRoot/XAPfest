@@ -27,35 +27,46 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-
-
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <Grid.RowDefinitions >
-                <RowDefinition Height="100"/>
-                <RowDefinition Height="300"/>
-            </Grid.RowDefinitions>
-
+        <StackPanel Orientation="Vertical" Name="ContentPanel" Grid.Row="1">
             <ListBox Name="ChatText" Visibility="Collapsed" />
+            
             <StackPanel Orientation="Vertical" Grid.ColumnSpan="2" Grid.Row="0" >
                 <TextBlock Text="You're invited to an adventure!" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBlock Text="Accept request?" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Text="Select your transportation type:" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <TextBlock Text="( Your location will be shared )" Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </StackPanel>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                
+                <Button Grid.Column="0" Name="YesButton" Background="LimeGreen" Grid.Row="1" Height="200" Click="Yes_Button_Click" >
+                    <TextBlock Name="YesButtonText" Text="Let's go!" Foreground="Beige" FontSize="30"/>
+                  
+                </Button>
+                <Button Grid.Column="1" Name="BikeButton" Background="LimeGreen" Height="200" Click="Yes_Button_Click" >
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="Images\Icons\bike_icon_white.png" />
+                        <TextBlock Name="BikeButtonText" Text="Bike" HorizontalAlignment="Center" Foreground="Beige" FontSize="30"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="2" Name="CarButton" Background="LimeGreen"  Height="200" Click="Yes_Button_Click" >
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="Images\Icons\car_icon_white.png" Margin="10,10,10,10" />
+                        <TextBlock Name="CarButtonText" Text="Car" HorizontalAlignment="Center" Foreground="Beige" FontSize="30"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
             
             <Button Name="NoButton" Background="Gray" Grid.Column="0" Grid.Row="1" Height="200">
                 <TextBlock Name="NoButtonText" Text="Not now" Foreground="DarkGray" FontSize="30"/>
             </Button>
-            <Button Name="YesButton" Background="LimeGreen" Grid.Column="1" Grid.Row="1" Height="200" Click="Yes_Button_Click" >
-                <TextBlock Name="YesButtonText" Text="Let's go!" Foreground="Beige" FontSize="30"/>
-            </Button>
-
-        </Grid>
+            
+        </StackPanel>
+        
     </Grid>
 
     <!--Sample code showing usage of ApplicationBar-->

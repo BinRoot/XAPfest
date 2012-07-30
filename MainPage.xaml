@@ -42,16 +42,18 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Collapsed" Name="DebugButtons">
-            <Button Content="&lt;--" Height="50" Tap="Button_Tap"/>
-            <Button Content="--&gt;" Height="50" Tap="Button_Tap_1"/>
-        </StackPanel>
+        
 
-        <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,50,0,0" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
+        <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
 
         <TextBlock Name="NotReadyText" Visibility="Collapsed" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
-        <ListBox Visibility="Collapsed" Name="FriendsOnMapList" ItemsSource="{Binding}" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Visibility="Collapsed" Name="DebugButtons">
+            <Button Content="&lt;--" Height="50" Tap="Button_Tap"/>
+            <Button Content="--&gt;" Height="50" Tap="Button_Tap_1"/>
+        </StackPanel>
+        
+        <ListBox Visibility="Collapsed" Name="FriendsOnMapList" ItemsSource="{Binding}" VerticalAlignment="Top" HorizontalAlignment="Center">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" />
@@ -151,12 +153,6 @@
             <!--Panorama item three-->
             <controls:PanoramaItem Header="map">
                 <StackPanel Orientation="Vertical">
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button Content="&lt;--" Height="50" Tap="Button_Tap"/>
-                        <Button Content="--&gt;" Height="50" Tap="Button_Tap_1"/>
-                    </StackPanel>
-
 
                     <my:Map Height="350" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" HorizontalAlignment="Center" Name="LyncUpMap" VerticalAlignment="Center" Width="400" >
                         <my:MapPolygon Fill="#99FF0000" Stroke="Red"
