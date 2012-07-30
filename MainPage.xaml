@@ -123,8 +123,6 @@
             <controls:PanoramaItem Header="people">
                 <!--Double line list with image placeholder and text wrapping-->
                 <StackPanel Orientation="Vertical">
-
-                    
                     <TextBox Visibility="Collapsed" x:Name="TextEntry" Width="400" Height="80"/>
 
                     <ListBox Name="PeopleList" ItemsSource="{Binding}">

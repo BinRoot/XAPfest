@@ -1122,7 +1122,7 @@ namespace SmashSampleApp
 
         private void friendLocationUpdated()
         {
-            MessageBox.Show("friend location updated");
+            // MessageBox.Show("friend location updated");
             plotLocation();
         }
 

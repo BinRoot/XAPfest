@@ -16,6 +16,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using System.Diagnostics;
+using Microsoft.Phone.Shell;
 
 namespace SmashSampleApp
 {
@@ -68,18 +69,7 @@ namespace SmashSampleApp
             {
                 Friend f = ((Model.Friend)GroupedList.SelectedItem);
 
-                if (DataUse.Instance.ActiveFriends == null)
-                {
-                    DataUse.Instance.ActiveFriends = new List<Friend>();
-                }
-
-                DataUse.Instance.ActiveFriends.Add(f);
-
-
-                SendToastToUser(f);
-
-                NavigationService.GoBack();
-
+                inviteFriendToLyncup(f);
 
             }
         }
@@ -155,7 +145,6 @@ namespace SmashSampleApp
 
         private static void GetResponseCallback(IAsyncResult asynchronousResult)
         {
-
             try
             {
                 HttpWebRequest request = (HttpWebRequest)asynchronousResult.AsyncState;
@@ -178,6 +167,136 @@ namespace SmashSampleApp
             {
                 Debug.WriteLine("PUSH ERR: " + e.Message);
             }
+        }
+
+        private void Search_Click(object sender, EventArgs e)
+        {
+            SearchPanel.Visibility = Visibility.Visible;
+            ContentPanel.Visibility = Visibility.Collapsed;
+
+            ApplicationBar.Buttons.Clear();
+            ApplicationBarIconButton button1 = new ApplicationBarIconButton();
+            button1.IconUri = new Uri("/Images/Icons/back_icon.png", UriKind.Relative);
+            button1.Text = "Browse";
+            button1.Click += new EventHandler(Back_clicked);
+            ApplicationBar.Buttons.Add(button1);
+        }
+
+        private void Back_clicked(object sender, EventArgs e)
+        {
+            SearchPanel.Visibility = Visibility.Collapsed;
+            ContentPanel.Visibility = Visibility.Visible;
+
+            ApplicationBar.Buttons.Clear();
+            ApplicationBarIconButton button1 = new ApplicationBarIconButton();
+            button1.IconUri = new Uri("/Images/Icons/search_icon.png", UriKind.Relative);
+            button1.Text = "Search";
+            button1.Click += new EventHandler(Search_Click);
+            ApplicationBar.Buttons.Add(button1);
+        }
+
+        public void RespondToSearchResults(List<Friend> fList)
+        {
+            FriendSearchListBox.DataContext = null;
+            FriendSearchListBox.DataContext = fList;
+            
+        }
+
+        private void Search_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            DataUse.Instance.DS.GetSearchResults(SearchBox.Text, this);
+        }
+
+        public void AddFriend_Tap(object sender, EventArgs e)
+        {
+            Button b = (Button) sender;
+            Friend f = (Friend)b.Tag;
+
+            bool found = false;
+            foreach (Friend ff in DataUse.Instance.FriendsList)
+            {
+                if (ff.id == f.id || f.id == DataUse.Instance.MyUserId)
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                DataUse.Instance.DS.AddFriend(DataUse.Instance.MyUserId, f.id);
+
+                DataUse.Instance.FriendsList.Add(f);
+
+                inviteFriendToLyncup(f);
+            }
+        }
+
+        private void inviteFriendToLyncup(Friend f)
+        {
+            if (DataUse.Instance.ActiveFriends == null)
+            {
+                DataUse.Instance.ActiveFriends = new List<Friend>();
+            }
+
+            bool found = false;
+            foreach (Friend ff in DataUse.Instance.ActiveFriends)
+            {
+                if (ff.id == f.id || f.id == DataUse.Instance.MyUserId)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                DataUse.Instance.ActiveFriends.Add(f);
+                SendToastToUser(f);
+                NavigationService.GoBack();
+            }
+            else
+            {
+                // already exists error
+                MessageBox.Show(f.name + " has already been added");
+            }
+
+
+            
+        }
+
+        // friendlsit, activefriends
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = (MenuItem)sender;
+
+            Friend f = (Friend)mi.Tag;
+
+            DataUse.Instance.DS.RemoveFriend(DataUse.Instance.MyUserId, f.id);
+
+            DataUse.Instance.ActiveFriends.Remove(f);
+            DataUse.Instance.FriendsList.Remove(f);
+
+            List<Friend> newActiveFriends = new List<Friend>();
+            foreach(Friend ff in DataUse.Instance.ActiveFriends)
+            {
+                if (ff.id != f.id)
+                {
+                    newActiveFriends.Add(ff);
+                }
+            }
+            DataUse.Instance.ActiveFriends = newActiveFriends;
+
+            List<Friend> newFriendsList = new List<Friend>();
+            foreach (Friend ff in DataUse.Instance.FriendsList)
+            {
+                if (ff.id != f.id)
+                {
+                    newFriendsList.Add(ff);
+                }
+            }
+            DataUse.Instance.FriendsList = newFriendsList;
+
+            NavigationService.GoBack();
         }
     }
 }

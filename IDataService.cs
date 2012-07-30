@@ -17,5 +17,8 @@ namespace SmashSampleApp
         void UpdatePushkey(string id, string pushkey);
         void GetNextEventId();
         void GetPushKey(string id, InvitationPage IP);
+        void GetSearchResults(string searchStr, FriendAdder FA);
+        void AddFriend(string myid, string friendid);
+        void RemoveFriend(string myid, string friendid);
     }
 }

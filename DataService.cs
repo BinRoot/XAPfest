@@ -20,6 +20,7 @@ namespace SmashSampleApp
 
         MainPage MP;
         InvitationPage IP;
+        FriendAdder FA;
 
         public DataService(MainPage MP)
         {
@@ -47,9 +48,25 @@ namespace SmashSampleApp
             send("http://lyncapi.appspot.com/user?pid=" + id);
         }
 
+        public void GetSearchResults(string searchStr, FriendAdder FA)
+        {
+            this.FA = FA;
+            send("http://lyncapi.appspot.com/search?str=" + searchStr);
+        }   
+
         public void GetProfile(string id)
         {
             send("https://apis.live.net/v5.0/" + id +"/picture");
+        }
+
+        public void AddFriend(string myid, string friendid)
+        {
+            send("http://lyncapi.appspot.com/friend?id=" + myid + "&friend=" + friendid);
+        }
+
+        public void RemoveFriend(string myid, string friendid)
+        {
+            send("http://lyncapi.appspot.com/friend?id=" + myid + "&friend=" + friendid + "&remove=true");
         }
 
 
@@ -72,6 +89,7 @@ namespace SmashSampleApp
                 {
                     Debug.WriteLine("d:" + e.Result);
                     List<Friend> Friends = JsonConvert.DeserializeObject<List<Friend>>(e.Result);
+
                     MP.RespondToGetFriends(Friends);
                 }
                 catch (Exception ex)
@@ -96,7 +114,13 @@ namespace SmashSampleApp
             }
             else if (WC.BaseAddress.Contains("apis.live.net"))
             {
-
+                // do nothing
+            }
+            else if (WC.BaseAddress.Contains("/search"))
+            {
+                List<Friend> Friends = JsonConvert.DeserializeObject<List<Friend>>(e.Result);
+                FA.RespondToSearchResults(Friends);
+                FA = null;
             }
         }
     }

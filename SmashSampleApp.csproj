@@ -75,6 +75,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Hawaii.ClientBase">
+      <HintPath>libs\Microsoft.Hawaii.ClientBase.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Hawaii.Smash.Client, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Live, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Live.Controls, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -192,6 +195,8 @@
     </None>
     <Resource Include="Images\Icons\ApplicationIcon.png" />
     <Resource Include="Images\Icons\TileIcon.png" />
+    <Content Include="Images\Icons\back_icon.png" />
+    <Content Include="Images\Icons\search_icon.png" />
     <Content Include="ServiceReferences.ClientConfig" />
     <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\GeocodeService\Arrays.xsd">

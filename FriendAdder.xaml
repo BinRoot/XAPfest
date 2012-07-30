@@ -10,7 +10,7 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
+    mc:Ignorable="d" d:DesignHeight="696" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:converter="clr-namespace:SmashSampleApp.Converter">
@@ -29,15 +29,44 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
             <TextBlock x:Name="ApplicationTitle" Text="Lync up with" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="people" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="PageTitle" Text="people" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" />
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
+
+        <StackPanel Name="SearchPanel" Orientation="Vertical" HorizontalAlignment="Stretch"  Grid.Row="1" VerticalAlignment="Top" Visibility="Collapsed" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal"  Height="80" VerticalAlignment="Top">
+                <TextBox Name="SearchBox" HorizontalAlignment="Stretch" Width="350" VerticalContentAlignment="Center" />
+                <Button Content="Search" HorizontalAlignment="Right" Tap="Search_Tap"></Button>
+            </StackPanel>
+            <ListBox Name="FriendSearchListBox" HorizontalAlignment="Stretch" ItemsSource="{Binding}" Height="400">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Height="100">
+                            <Image Width="80" Height="80" VerticalAlignment="Center" HorizontalAlignment="Center" Source="{Binding ImgSrc}" />
+                            <StackPanel Width="280" VerticalAlignment="Center" Margin="5,0,0,0">
+                                <TextBlock Text="{Binding name}" FontWeight="Thin" FontSize="30" Margin="5,0,0,0"/>
+                            </StackPanel>
+                            <Button VerticalAlignment="Stretch" Tag="{Binding}" Tap="AddFriend_Tap" Margin="0,0,5,0">
+                                <Image Height="60" Width="60" Source="Images/Icons/plus_icon.png"/>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <toolkit:LongListSelector Name="GroupedList" Tap="GroupedList_Tap">
                 <toolkit:LongListSelector.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding name}" Padding="{StaticResource PhoneTouchTargetOverhang}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" ManipulationStarted="TextBlock_ManipulationStarted" ManipulationCompleted="TextBlock_ManipulationCompleted" />
+                        <TextBlock Text="{Binding name}" Padding="{StaticResource PhoneTouchTargetOverhang}" FontSize="{StaticResource PhoneFontSizeMediumLarge}" ManipulationStarted="TextBlock_ManipulationStarted" ManipulationCompleted="TextBlock_ManipulationCompleted" >
+                            <toolkit:ContextMenuService.ContextMenu>
+                                <toolkit:ContextMenu>
+                                    <toolkit:MenuItem Header="Remove friend" Click="MenuItem_Click" Tag="{Binding}"/>
+                                </toolkit:ContextMenu>
+                            </toolkit:ContextMenuService.ContextMenu>
+                        </TextBlock>
                     </DataTemplate>
                 </toolkit:LongListSelector.ItemTemplate>
 
@@ -71,16 +100,10 @@
         </Grid>
     </Grid>
 
-    <!--Sample code showing usage of ApplicationBar-->
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
+    <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
-            </shell:ApplicationBar.MenuItems>
+            <shell:ApplicationBarIconButton IconUri="/Images/Icons/search_icon.png" Text="Search" Click="Search_Click"/>
         </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>
