@@ -39,45 +39,55 @@ namespace SmashSampleApp
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (this.NavigationContext.QueryString.ContainsKey("eventid")
-                && this.NavigationContext.QueryString.ContainsKey("friend")
-                && this.NavigationContext.QueryString.ContainsKey("friendid")
-                && this.NavigationContext.QueryString.ContainsKey("myid")
-                && this.NavigationContext.QueryString.ContainsKey("myname"))
+            try
             {
-                eventid = this.NavigationContext.QueryString["eventid"];
-                friend = this.NavigationContext.QueryString["friend"];
-                friendid = this.NavigationContext.QueryString["friendid"];
-                myid = this.NavigationContext.QueryString["myid"];
-                myname = this.NavigationContext.QueryString["myname"];
 
-                AddOrUpdateSettings("eventid", eventid);
-                AddOrUpdateSettings("friend", friend);
-                AddOrUpdateSettings("friendid", friendid);
-                AddOrUpdateSettings("myid", myid);
-                AddOrUpdateSettings("myname", myname);
-                AddOrUpdateSettings("ready", false);
-                AddOrUpdateSettings("setupMode", false);
+                if (this.NavigationContext.QueryString.ContainsKey("eventid")
+                    && this.NavigationContext.QueryString.ContainsKey("friend")
+                    && this.NavigationContext.QueryString.ContainsKey("friendid")
+                    && this.NavigationContext.QueryString.ContainsKey("myid")
+                    && this.NavigationContext.QueryString.ContainsKey("myname"))
+                {
+                    eventid = this.NavigationContext.QueryString["eventid"];
+                    friend = this.NavigationContext.QueryString["friend"];
+                    friendid = this.NavigationContext.QueryString["friendid"];
+                    myid = this.NavigationContext.QueryString["myid"];
+                    myname = this.NavigationContext.QueryString["myname"];
 
-                DataUse.Instance.MyUserId = myid;
-                DataUse.Instance.MyUserName = myname;
-                PageTitle.Text = friend;
+                    AddOrUpdateSettings("eventid", eventid);
+                    AddOrUpdateSettings("friend", friend);
+                    AddOrUpdateSettings("friendid", friendid);
+                    AddOrUpdateSettings("myid", myid);
+                    AddOrUpdateSettings("myname", myname);
+                    AddOrUpdateSettings("ready", false);
+                    AddOrUpdateSettings("setupMode", false);
 
-                
-                MP = new MainPage(false);
+                    DataUse.Instance.MyUserId = myid;
+                    DataUse.Instance.MyUserName = myname;
+                    PageTitle.Text = friend;
 
-                // MessageBox.Show("I want to join the chatroom: " + eventid);
-                MP.JoinMeeting(eventid);
+
+                    MP = new MainPage(false);
+
+                    // MessageBox.Show("I want to join the chatroom: " + eventid);
+                    MP.JoinMeeting(eventid);
+                }
             }
-
-            
+            catch (Exception err)
+            {
+                MessageBox.Show("> "+err.Message);
+            }
 
 
             base.OnNavigatedTo(e);
         }
 
-        private void Yes_Button_Click(object sender, RoutedEventArgs e)
+
+        private string transportation;
+        private void SendReply(string transportation)
         {
+            this.transportation = transportation;
+
             if (DataUse.Instance.DS == null)
             {
                 DataUse.Instance.DS = new DataService(null);
@@ -89,27 +99,13 @@ namespace SmashSampleApp
             {
                 MP.SendText(DataUse.Instance.MessageToSend);
 
-                YesButtonText.Text = "Let's go!";
                 NoButton.IsEnabled = true;
-                YesButton.IsEnabled = true;
-
-                
+                WalkButton.IsEnabled = true;
+                BikeButton.IsEnabled = true;
+                CarButton.IsEnabled = true;
             }
-            else
-            {
-                YesButtonText.Text = "Loading...";
-
-                NoButton.IsEnabled = false;
-                YesButton.IsEnabled = false;
-
-                Yes_Button_Click(null, null);
-            }
-            
-           // send toast
-            // SendText(message);
-            // MP.SendText(message);
-
         }
+
 
         public void SendToastToUser(string pushkey)
         {
@@ -119,11 +115,20 @@ namespace SmashSampleApp
             IDictionary DataTable = new Dictionary<String, String>();
             DataTable["friendacceptid"] = myid;
             DataTable["friendstatus"] = "yes";
+            DataTable["transportation"] = transportation;
             PushAPI.SendToastToUser(pushkey, Title, SubTitle, DataTable, "MainPage");
 
-            // NavigationService.GoBack();
-            YesButton.IsEnabled = false;
-            YesButtonText.Text = "Sending...";
+            WalkButton.IsEnabled = true;
+            BikeButton.IsEnabled = true;
+            CarButton.IsEnabled = true;
+
+            if (transportation == "walk")
+                WalkButtonText.Text = "...";
+            if (transportation == "bike")
+                BikeButtonText.Text = "...";
+            if (transportation == "car")
+                CarButtonText.Text = "...";
+
             NoButton.IsEnabled = false;
             Thread thread1 = new Thread(new ThreadStart(GoBackLater));
             thread1.Start();
@@ -162,5 +167,21 @@ namespace SmashSampleApp
             }
             return valueChanged;
         }
+
+        private void Walk_Button_Click(object sender, RoutedEventArgs e)
+        {
+            SendReply("walk");
+        }
+
+        private void Bike_Button_Click(object sender, RoutedEventArgs e)
+        {
+            SendReply("bike");
+        }
+
+        private void Car_Button_Click(object sender, RoutedEventArgs e)
+        {
+            SendReply("car");
+        }
+
     }
 }

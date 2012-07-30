@@ -366,6 +366,7 @@ namespace SmashSampleApp
 
                     string Status = "";
                     string FriendId = "";
+                    string TransportationType = "";
                     for (int i = 0; i < dataParts.Length; i++)
                     {
                         string[] keyval = dataParts[i].Split('=');
@@ -377,6 +378,10 @@ namespace SmashSampleApp
                         {
                             Status = keyval[1];
                         }
+                        else if (keyval[0] == "transportation")
+                        {
+                            TransportationType = keyval[1];
+                        }
                     }
 
                     if (Status == "yes")
@@ -387,6 +392,7 @@ namespace SmashSampleApp
                             if (f1.id == FriendId)
                             {
                                 DataUse.Instance.ActiveFriends[i].status = "yes";
+                                DataUse.Instance.ActiveFriends[i].transportation = TransportationType;
                             }
                         }
 
@@ -395,8 +401,6 @@ namespace SmashSampleApp
                             PeopleList.DataContext = null;
                             PeopleList.DataContext = DataUse.Instance.ActiveFriends;
                         });
-
-
                     }
                 }
             }
@@ -458,7 +462,6 @@ namespace SmashSampleApp
 
         private void AddPerson_Button(object sender, RoutedEventArgs e)
         {
-
             Uri uri = new Uri("/FriendAdder.xaml", UriKind.Relative);
             NavigationService.Navigate(uri);
         }
