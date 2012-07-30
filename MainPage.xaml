@@ -46,9 +46,9 @@
             <Button Content="&lt;--" Height="50" Tap="Button_Tap"/>
             <Button Content="--&gt;" Height="50" Tap="Button_Tap_1"/>
         </StackPanel>
-        
+
         <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" Margin="0,50,0,0" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
-       
+
         <toolkit2:LoopingSelector Visibility="Collapsed" x:Name="selector" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemMargin="2,3,3,2" ItemSize="100,100"/>
 
 
@@ -82,40 +82,38 @@
             </controls:Panorama.TitleTemplate>
 
             <!--Panorama item one-->
-            <controls:PanoramaItem Header="settings">
-                <ListBox Margin="0,0,-12,0">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="NamePanel" Tap="NamePanel_Tap">
-                        <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/name_icon_white.png" Margin="12,0,9,0"/>
-                        <StackPanel Width="311">
-                            <TextBlock Text="display name"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
-                            <TextBlock Name="name" Text="jasdev singh" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
-                        </StackPanel>
+            <controls:PanoramaItem Header="settings" VerticalAlignment="Stretch">
+                <Grid Margin="0,0,-12,0">
+                    <StackPanel Margin="0,0,-12,0" VerticalAlignment="Top">
+                        <TextBlock Text="Welcome to LyncUp!" FontSize="26"/>
+                        <TextBlock Text="1.  Choose a transportation mode and meetup radius" TextWrapping="Wrap" FontSize="18"/>
+                        <TextBlock Text="2.  Choose a category and pick your location" FontSize="18"/>
+                        <TextBlock Text="3.  Review your attendees and let the good times roll!" FontSize="18"/>
                     </StackPanel>
+                    <StackPanel Margin="0,40,-12,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="TransportationPanel" Tap="TransportationPanel_Tap" VerticalAlignment="Stretch">
+                            <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/bike_icon_white.png" Margin="12,0,9,0"/>
+                            <StackPanel Width="311">
+                                <TextBlock Text="transportation"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                                <TextBlock Text="bike" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="TransportationPanel" Tap="TransportationPanel_Tap">
-                        <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/bike_icon_white.png" Margin="12,0,9,0"/>
-                        <StackPanel Width="311">
-                            <TextBlock Text="transportation"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
-                            <TextBlock Text="bike" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,3" Name="RadiusPanel" Tap="RadiusPanel_Tap">
+                            <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/radius_icon_white.png" Margin="12,0,9,0"/>
+                            <StackPanel Width="311">
+                                <TextBlock Text="meetup radius"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
+                                <TextBlock Name="radiusText" Text="2 miles" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="RadiusPanel" Tap="RadiusPanel_Tap">
-                        <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/radius_icon_white.png" Margin="12,0,9,0"/>
-                        <StackPanel Width="311">
-                            <TextBlock Text="meetup radius"  TextWrapping="Wrap" Style="{StaticResource PhoneTextExtraLargeStyle}"/>
-                            <TextBlock Name="radiusText" Text="2 miles" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
-                        </StackPanel>
                     </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,17" Name="UpdatePanel" Tap="UpdatePanel_Tap">
-                        <Image Height="100" Width="100" Source="/SmashSampleApp;component/Images/Icons/update_icon_white.png" Margin="12,0,9,0" />
-                        <StackPanel Width="311">
-                            <TextBlock Text="update frequency"  TextWrapping="Wrap" Style="{StaticResource PhoneTextLargeStyle}"/>
-                            <TextBlock Text="4 minutes" TextWrapping="Wrap" Margin="12,-6,12,0" Style="{StaticResource PhoneTextSubtleStyle}"/>
-                        </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <TextBlock Text="Team noMenuBar: " FontSize="18"/>
+                        <HyperlinkButton Content="@binroo" NavigateUri="https://twitter.com/BinRoo" TargetName="_blank" FontSize="18" Foreground="#FF00AEEF"></HyperlinkButton>
+                        <HyperlinkButton Content="@justdavesingh" NavigateUri="https://twitter.com/justdavesingh" TargetName="_blank" FontSize="18" Foreground="#FF00AEEF" />
                     </StackPanel>
-                </ListBox>
+                </Grid>
             </controls:PanoramaItem>
 
             <!--Panorama item two-->
@@ -124,7 +122,7 @@
                 <!--Double line list with image placeholder and text wrapping-->
                 <StackPanel Orientation="Vertical">
 
-                    
+
                     <TextBox Visibility="Collapsed" x:Name="TextEntry" Width="400" Height="80"/>
 
                     <ListBox Name="PeopleList" ItemsSource="{Binding}">
@@ -163,8 +161,8 @@
                         <Button Content="&lt;--" Height="50" Tap="Button_Tap"/>
                         <Button Content="--&gt;" Height="50" Tap="Button_Tap_1"/>
                     </StackPanel>
-                    
-                    
+
+
                     <my:Map Height="350" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" HorizontalAlignment="Center" Name="LyncUpMap" VerticalAlignment="Center" Width="400" >
                         <my:MapPolygon Fill="#99FF0000" Stroke="Red"
                         StrokeThickness="1"
@@ -205,12 +203,12 @@
                             </ListBox.ItemsPanel>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Image Width="80" Height="80" Source="{Binding ImgSrc}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Image Width="80" Height="80" Source="{Binding ImgSrc}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.8" />
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </Grid>
-                    <Button Content="Go" Tap="Go_Tap" />
+                    <Button Name="goButton" Content="Go" Tap="Go_Tap" IsEnabled="False" />
                 </StackPanel>
             </controls:PanoramaItem>
         </controls:Panorama>

@@ -479,7 +479,7 @@ namespace SmashSampleApp
             control.btnOK.Click += (s, args) =>
             {
                 popup.IsOpen = false;
-                name.Text = control.tbx.Text;
+                //name.Text = control.tbx.Text;
             };
 
             control.btnCancel.Click += (s, args) =>
@@ -506,12 +506,6 @@ namespace SmashSampleApp
             radiusText.Text = selector.DataSource.SelectedItem + " miles";
             MainPanorama.Visibility = Visibility.Visible;
             plotLocation();
-        }
-
-        private void UpdatePanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            // MessageBox.Show("But here's my number, so call me maybe?");
-            
         }
 
         private void RemovePerson_Button(object sender, RoutedEventArgs e)
@@ -623,6 +617,8 @@ namespace SmashSampleApp
                     selectedVenue = (from x in venues
                                      where ((Venue)x).name == ((TextBlock)((Pushpin)sender).Content).Text
                                      select x).FirstOrDefault();
+
+                    goButton.IsEnabled = true;
                 }
 
                 List<GeoCoordinate> locations = new List<GeoCoordinate>();
@@ -690,6 +686,7 @@ namespace SmashSampleApp
         private void map_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             clearTooltips();
+            goButton.IsEnabled = false;
         }
 
         private void clearMap(Type t, Map m)
