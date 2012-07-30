@@ -194,7 +194,10 @@
                             </ListBox.ItemsPanel>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Image Width="80" Height="80" Source="{Binding ImgSrc}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.8" />
+                                    <Grid>
+                                    <Image Width="80" Height="80" Source="{Binding ImgSrc}" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.6" />
+                                        <TextBlock Text="{Binding dataString}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+                                    </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>

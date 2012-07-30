@@ -19,6 +19,7 @@ namespace SmashSampleApp.Model
         public string pushkey { get; set; }
         public string status { get; set; }
         public string transportation { get; set; }
+        public string dataString { get; set; }
 
         public BitmapImage ImgSrc
         {
