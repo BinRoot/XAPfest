@@ -45,8 +45,6 @@ namespace SmashSampleApp
         {
             if (e.Error == null)
             {
-                btnSignin.Visibility = Visibility.Collapsed;
-
                 string firstName = "";
                 string lastName = "";
                 if (e.Result.ContainsKey("first_name") ||

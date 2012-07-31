@@ -201,6 +201,7 @@
     <Resource Include="Images\Icons\walk_icon_white.png" />
     <Resource Include="Images\mapbar.png" />
     <Resource Include="Images\mapbardark.png" />
+    <Resource Include="Images\bg1.jpg" />
     <Content Include="ServiceReferences.ClientConfig" />
     <Content Include="ServiceReferences.ClientConfig" />
     <None Include="Service References\GeocodeService\Arrays.xsd">

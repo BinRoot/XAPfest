@@ -579,11 +579,11 @@ namespace SmashSampleApp
                     if (watcher.Permission == GeoPositionPermission.Denied)
                     {
                         // The user has disabled the Location Service on their device.
-                        MessageBox.Show("you have blocked this application from access to location.");
+                        MessageBox.Show("You have blocked this application from access to location.  Please enable GPS!");
                     }
                     else
                     {
-                        MessageBox.Show("location is not functioning on this device");
+                        MessageBox.Show("Location is not functioning on this device, please try again in a few moments.");
                     }
                     break;
 
@@ -595,7 +595,7 @@ namespace SmashSampleApp
                 case GeoPositionStatus.NoData:
                     // The Location Service is working, but it cannot get location data.
                     // Alert the user and enable the Stop Location button.
-                    MessageBox.Show("location data is not available.");
+                    MessageBox.Show("Location data is not available, please wait until location data is available.");
                     break;
 
                 case GeoPositionStatus.Ready:
@@ -664,6 +664,7 @@ namespace SmashSampleApp
                                      select x).FirstOrDefault();
 
                     goButton.IsEnabled = true;
+                    goButton.Content = "Go!";
 
                     foreach (var friend in DataUse.Instance.ActiveFriends)
 	                {
@@ -771,7 +772,16 @@ namespace SmashSampleApp
         private void map_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             clearTooltips();
+            goButton.Content = "Pick a location!";
             goButton.IsEnabled = false;
+
+            foreach (var friend in DataUse.Instance.ActiveFriends)
+            {
+                friend.dataString = "";
+            }
+
+            FinalizeList.DataContext = null;
+            FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
         }
 
         private void clearMap(Type t, Map m)
@@ -826,7 +836,7 @@ namespace SmashSampleApp
             polygon.Fill = new SolidColorBrush(Colors.Green);
             polygon.Stroke = new SolidColorBrush(Colors.Blue);
             polygon.StrokeThickness = 2;
-            polygon.Opacity = .1;
+            polygon.Opacity = .2;
 
             polygon.Visibility = Visibility.Collapsed;
             if (watcher.Position.Location == null)
