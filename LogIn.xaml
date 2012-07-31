@@ -16,6 +16,9 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
+        <Grid.Background>
+            <ImageBrush ImageSource="images/bg1.jpg" Stretch="UniformToFill" />
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -31,7 +34,7 @@
 
             <Image Height="150" HorizontalAlignment="Center"  Name="image1" Stretch="None" VerticalAlignment="Top" Width="482" Source="Images/LyncUpLogo.png" />
             <my:SignInButton Name="btnSignin" ClientId="000000004406774D" Scopes="wl.signin wl.basic wl.offline_access wl.contacts_photos" Branding="Windows" TextType="SignIn" SessionChanged="btnSignin_SessionChanged" HorizontalAlignment="Center"  VerticalAlignment="Center" BorderBrush="White" Foreground="White" Width="300" Grid.Row="1" Height="100" />
-            <TextBlock Height="30" HorizontalAlignment="Center"  Name="infoTextBlock" Text="" VerticalAlignment="Center" Grid.Row="2" />
+            <TextBlock Height="40" HorizontalAlignment="Center"  Name="infoTextBlock" Text="" VerticalAlignment="Center" Grid.Row="2" FontSize="30" />
         </Grid>
     </Grid>
 

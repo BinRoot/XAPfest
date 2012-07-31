@@ -211,7 +211,10 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </Grid>
-                    <Button Name="goButton" Content="Go" Tap="Go_Tap" IsEnabled="False" />
+                    <Button Name="goButton" Background="LimeGreen" Content="Pick a location!" Tap="Go_Tap" IsEnabled="False" MinHeight="0" Height="150" FontSize="32" />
+                    <!--<Border Name="goButton" Background="LimeGreen" Height="70" Tap="Go_Tap" CornerRadius="20" Grid.Column="2" Grid.Row="2" Margin="10,0,10,0">
+                        <TextBlock Text="Pick a location!" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="32" />
+                    </Border>-->
                 </StackPanel>
             </controls:PanoramaItem>
         </controls:Panorama>
