@@ -147,6 +147,20 @@ namespace SmashSampleApp
 
             DataUse.Instance.ActiveLocationMode = true;
 
+            try
+            {
+                string trans = (string)settings["transportation"];
+                if (string.IsNullOrEmpty(trans))
+                {
+                    AddOrUpdateSettings("transportation", "car");
+                }
+            }
+            catch
+            {
+                AddOrUpdateSettings("transportation", "car");
+            }
+            
+
             if (InSetupMode == false)
             {
                 setUpDone();
@@ -498,12 +512,15 @@ namespace SmashSampleApp
             {
                 case "bike":
                     TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/bike_icon_white.png", UriKind.Relative));
+                    AddOrUpdateSettings("transportation", "bike");
                     break;
                 case "car":
                     TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/car_icon_white.png", UriKind.Relative));
+                    AddOrUpdateSettings("transportation", "car");
                     break;
                 case "walk":
                     TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/walk_icon_white.png", UriKind.Relative));
+                    AddOrUpdateSettings("transportation", "walk");
                     break;
                 default:
                     break;
@@ -632,8 +649,7 @@ namespace SmashSampleApp
 
                     foreach (var friend in DataUse.Instance.ActiveFriends)
 	                {
-                        //BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, friend.transportation, this);
-                        BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, "bike", this, friend);
+                        BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, friend.transportation, this, friend);
                         
                         call.GetData();
 	                }
@@ -734,11 +750,11 @@ namespace SmashSampleApp
             clearMap(typeof(Object), LyncUpMap);
 
 
-            DataUse.Instance.MessageToSend = DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + lat + "," + lon;
+            DataUse.Instance.MessageToSend = (string)settings["transportation"] + "," + DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + lat + "," + lon;
             if (DataUse.Instance.RoomCreated && DataUse.Instance.ActiveLocationMode)
             {
                 //MessageBox.Show("sending: " + DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + lat + "," + lon);
-                SendText(DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + lat + "," + lon);
+                SendText((string)settings["transportation"] + "," + DataUse.Instance.MyUserName + "," + DataUse.Instance.MyUserId + "," + lat + "," + lon);
             }
             else
             {
@@ -804,6 +820,7 @@ namespace SmashSampleApp
                     try
                     {
                         LyncUpMap.SetView(watcher.Position.Location, 12);
+                        MainMap.SetView(LocationRect.CreateLocationRect(friendMap.Values));
                     }
                     catch (NullReferenceException)
                     {
@@ -1000,16 +1017,16 @@ namespace SmashSampleApp
         private void readMessage(string newMessage)
         {
             string[] strSplit = newMessage.Split(',');
-            if (strSplit.Length == 4)
+            if (strSplit.Length == 5)
             {
                 // MessageBox.Show("msg received: " + newMessage);
-                string friendname = strSplit[0].Replace("(): ", "").TrimStart();
-                string friendid = strSplit[1];
-                string latStr = strSplit[2];
-                string lonStr = strSplit[3];
+                string transportation = strSplit[0].Replace("(): ", "").TrimStart();
+                string friendname = strSplit[1];
+                string friendid = strSplit[2];
+                string latStr = strSplit[3];
+                string lonStr = strSplit[4];
 
-
-                // TODO: this is working...
+                
                 bool found = false;
                 foreach (Friend fa in DataUse.Instance.ActiveFriends)
                 {
@@ -1024,6 +1041,7 @@ namespace SmashSampleApp
                 {
 
                     Friend fa = new Friend(friendname, friendid, "");
+                    fa.transportation = transportation;
                     DataUse.Instance.ActiveFriends.Add(fa);
 
                     FriendsOnMapList.DataContext = null;
@@ -1157,9 +1175,15 @@ namespace SmashSampleApp
 
         private void Go_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
+
+            string eventloc = selectedVenue.location.Latitude + "," + selectedVenue.location.Longitude;
+            AddOrUpdateSettings("eventloc", eventloc);
+            AddOrUpdateSettings("eventname", selectedVenue.name);
+
             AddOrUpdateSettings("ready", true);
             InformActiveFriends();
             setUpDone();
+
         }
 
         private void InformActiveFriends()
@@ -1200,6 +1224,49 @@ namespace SmashSampleApp
         {
             currentLat = currentLat + 0.001;
             positionChanged(currentLat + 0.001, currentLon);
+        }
+
+        private void Friend_Map_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            Image i = (Image)sender;
+            Friend f = (Friend)i.Tag;
+
+            friendOnMapTapped(f);
+        }
+
+        private void friendOnMapTapped(Friend f)
+        {
+            
+            // TODO: ask bing api for data update
+
+            if (friendMap.ContainsKey(f.id))
+            {
+                MessageBox.Show(f.name + ", " + friendMap[f.id].Latitude + ", " + getEventLoc().Latitude + ", [" + f.transportation +"]");
+                BingAPICall BAPI = new BingAPICall(friendMap[f.id], getEventLoc(), f.transportation, this, f);
+                BAPI.GetData();
+
+                MainMap.SetView((friendMap[f.id]), 16);
+            }
+
+        }
+
+        private GeoCoordinate getEventLoc()
+        {
+            try
+            {
+                string eventloc = (string)settings["eventloc"];
+                string latstr = eventloc.Split(',')[0];
+                string lonstr = eventloc.Split(',')[1];
+
+                double latd = double.Parse(latstr);
+                double lond = double.Parse(lonstr);
+
+                return new GeoCoordinate(latd, lond);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

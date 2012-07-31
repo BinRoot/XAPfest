@@ -86,6 +86,8 @@ namespace SmashSampleApp
         private string transportation;
         private void SendReply(string transportation)
         {
+            AddOrUpdateSettings("transportation", transportation);
+
             this.transportation = transportation;
 
             if (DataUse.Instance.DS == null)

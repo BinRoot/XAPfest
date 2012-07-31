@@ -11,6 +11,7 @@ using System.Windows.Shapes;
 using SmashSampleApp.Model;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
+using System.IO.IsolatedStorage;
 
 namespace SmashSampleApp
 {
@@ -51,6 +52,7 @@ namespace SmashSampleApp
                     activeFriends = new List<Friend>();
                     Friend me = new Friend(MyUserName, MyUserId, "");
                     me.status = "yes";
+                    me.transportation = (string)IsolatedStorageSettings.ApplicationSettings["transportation"];
                     activeFriends.Add(me);
                 }
                 return activeFriends;

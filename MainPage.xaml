@@ -42,8 +42,6 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        
-
         <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
 
         <TextBlock Name="NotReadyText" Visibility="Collapsed" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
@@ -52,7 +50,8 @@
             <Button Content="&lt;--" Height="50" Tap="Button_Tap"/>
             <Button Content="--&gt;" Height="50" Tap="Button_Tap_1"/>
         </StackPanel>
-        
+
+        <Image Source="Images/mapbar.png" VerticalAlignment="Top" Height="100" Width="600" HorizontalAlignment="Stretch"/>
         <ListBox Visibility="Collapsed" Name="FriendsOnMapList" ItemsSource="{Binding}" VerticalAlignment="Top" HorizontalAlignment="Center">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -62,10 +61,17 @@
 
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Image Width="100" Height="100" Source="{Binding ImgSrc}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Image Width="100" Height="100" Source="{Binding ImgSrc}" Tag="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center" Tap="Friend_Map_Tap"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        
+        
+        <Grid VerticalAlignment="Bottom" Height="100">
+            <Image Source="Images/mapbardark.png" Height="100" Width="600" HorizontalAlignment="Stretch"/>
+            <TextBlock Name="FriendMapInfoText" Text="Tap a person for more info" VerticalAlignment="Center" FontSize="24" Foreground="White" HorizontalAlignment="Center" FontWeight="Bold" />
+        </Grid>
+        
 
         <!--Panorama control-->
         <controls:Panorama Title="" Name="MainPanorama">

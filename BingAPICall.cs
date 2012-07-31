@@ -94,6 +94,10 @@ namespace SmashSampleApp
 
             MP.FinalizeList.DataContext = null;
             MP.FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
+
+            MP.FriendsOnMapList.DataContext = null;
+            MP.FriendsOnMapList.DataContext = DataUse.Instance.ActiveFriends;
+            MP.FriendMapInfoText.Text = f.dataString;
         } 
     }
 }
