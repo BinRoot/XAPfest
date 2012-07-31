@@ -617,6 +617,8 @@ namespace SmashSampleApp
 
                 LyncUpMap.Children.Add(venuePushpin);
             }
+
+            LyncUpMap.SetView(LocationRect.CreateLocationRect(list));
         }
 
         private void clearTooltips()
@@ -745,7 +747,10 @@ namespace SmashSampleApp
                 foreach (var item in friendMap.Values)
                 {
                     GeoCoordinate gEL = getEventLoc();
-                    plotRoute(item, gEL, RouteLayerMain);
+                    if (gEL != null)
+                    {
+                        plotRoute(item, gEL, RouteLayerMain); 
+                    }
                 }
                 
             }
