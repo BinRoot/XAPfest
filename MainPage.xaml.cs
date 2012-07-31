@@ -675,6 +675,15 @@ namespace SmashSampleApp
             e.Handled = true;
         }
 
+        private void pin_Tap2(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            clearTooltips();
+
+            //So I heard you like casting...
+            ((TextBlock)((Pushpin)sender).Content).Visibility = Visibility.Visible;
+            e.Handled = true;
+        }
+
         public void plotRoute(GeoCoordinate start, GeoCoordinate end, MapLayer ml)
         {
             List<GeoCoordinate> locations = new List<GeoCoordinate>();
@@ -705,10 +714,10 @@ namespace SmashSampleApp
                     routeLine.Locations.Add(new GeoCoordinate(location.Latitude, location.Longitude));
                 }
 
-                RouteLayer.Children.Add(routeLine);
+                ml.Children.Add(routeLine);
             };
 
-            LyncUpMap.SetView(LocationRect.CreateLocationRect(locations));
+            MainMap.SetView(LocationRect.CreateLocationRect(locations));
 
             routeService.CalculateRouteAsync(new RouteService.RouteRequest()
             {
@@ -730,10 +739,19 @@ namespace SmashSampleApp
 
         public void plotFriendRoutes()
         {
-            RouteLayerMain.Children.Clear();
-            foreach (var item in friendMap.Values)
+            try
             {
-                plotRoute(item, selectedVenue.location, RouteLayerMain);
+                RouteLayerMain.Children.Clear();
+                foreach (var item in friendMap.Values)
+                {
+                    GeoCoordinate gEL = getEventLoc();
+                    plotRoute(item, gEL, RouteLayerMain);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(">< " + e.Message);
             }
         }
 
@@ -887,6 +905,8 @@ namespace SmashSampleApp
 
                     clearMap(typeof(Pushpin), MainMap);
 
+                    plotEvent();
+
                     foreach (var item in friendLocations)
                     {
                         if (InSetupMode)
@@ -911,6 +931,21 @@ namespace SmashSampleApp
         }
 
         #endregion
+
+        private void plotEvent()
+        {
+            Pushpin venuePushpin = new Pushpin();
+            venuePushpin.Background = new SolidColorBrush(Colors.Blue);
+            venuePushpin.Opacity = 0.6;
+            venuePushpin.Location = getEventLoc();
+            venuePushpin.Tap += this.pin_Tap2;
+
+            venuePushpin.Content = new TextBlock();
+            ((TextBlock)venuePushpin.Content).Text = (string)settings["eventname"];
+            ((TextBlock)venuePushpin.Content).Visibility = Visibility.Collapsed;
+
+            MainMap.Children.Add(venuePushpin);
+        }
 
         private void FoodButton_Click(object sender, RoutedEventArgs e)
         {
@@ -1130,15 +1165,18 @@ namespace SmashSampleApp
                     string eventloc = (string)settings["eventloc"];
 
                     MessageBox.Show(eventname + " at " + eventloc);
+
+                    plotEvent();
+
                 }
                 else
                 {
                     NotReadyText.Visibility = Visibility.Visible;
                 }
             }
-            catch
+            catch (Exception e)
             {
-
+                MessageBox.Show("*>* "+e.Message);
             }
 
 
@@ -1177,6 +1215,11 @@ namespace SmashSampleApp
         {
             // MessageBox.Show("friend location updated");
             plotLocation();
+
+            if (friendMap.Keys.Count > 0 && !InSetupMode)
+            {
+                plotFriendRoutes();
+            }
         }
 
         private void Leave_MenuItem_Click(object sender, EventArgs e)
