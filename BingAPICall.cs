@@ -91,7 +91,7 @@ namespace SmashSampleApp
             }
 
             f.dataString = distance + " mi" + "\n" + time/60 + "m" + time%60 + "s";
-            MessageBox.Show(f.dataString);
+            // MessageBox.Show(f.dataString);
 
             MP.FinalizeList.DataContext = null;
             MP.FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
@@ -99,6 +99,7 @@ namespace SmashSampleApp
             MP.FriendsOnMapList.DataContext = null;
             MP.FriendsOnMapList.DataContext = DataUse.Instance.ActiveFriends;
             MP.FriendMapInfoText.Text = f.dataString;
+            MP.FriendMapNameText.Text = f.name;
         } 
     }
 }

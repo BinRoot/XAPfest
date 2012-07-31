@@ -49,13 +49,8 @@
 
         <TextBlock Name="NotReadyText" Visibility="Collapsed" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Visibility="Collapsed" Name="DebugButtons">
-            <Button Content="&lt;--" Height="50" Tap="Button_Tap"/>
-            <Button Content="--&gt;" Height="50" Tap="Button_Tap_1"/>
-        </StackPanel>
-
         <Image Source="Images/mapbar.png" VerticalAlignment="Top" Height="100" Width="600" HorizontalAlignment="Stretch"/>
-        <ListBox Visibility="Collapsed" Name="FriendsOnMapList" ItemsSource="{Binding}" VerticalAlignment="Top" HorizontalAlignment="Center">
+        <ListBox Visibility="Collapsed" Name="FriendsOnMapList" ItemsSource="{Binding}" VerticalAlignment="Top" HorizontalAlignment="Left">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" />
@@ -72,7 +67,11 @@
         
         <Grid VerticalAlignment="Bottom" Height="100">
             <Image Source="Images/mapbardark.png" Height="100" Width="600" HorizontalAlignment="Stretch"/>
-            <TextBlock Name="FriendMapInfoText" Text="Tap a person for more info" VerticalAlignment="Center" FontSize="24" Foreground="White" HorizontalAlignment="Center" FontWeight="Bold" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Name="FriendMapNameText" Margin="0,0,5,0" Foreground="White"/>
+                <TextBlock Name="FriendMapInfoText" Text="Tap a person for more info" FontSize="24" Foreground="White" FontWeight="Bold" />
+            </StackPanel>
+            
         </Grid>
         
 
@@ -128,10 +127,22 @@
             <!--Use 'Orientation="Horizontal"' to enable a panel that lays out horizontally-->
             <controls:PanoramaItem Header="people">
                 <!--Double line list with image placeholder and text wrapping-->
-                <StackPanel Orientation="Vertical">
+                <StackPanel Name="FriendAdderStackPanel" Orientation="Vertical" Margin="0,0,0,20">
                     <TextBox Visibility="Collapsed" x:Name="TextEntry" Width="400" Height="80"/>
 
-                    <ListBox Name="PeopleList" ItemsSource="{Binding}">
+                    <Button BorderThickness="4" BorderBrush="GreenYellow" Height="100" VerticalAlignment="Top" Margin="10,10,10,10" Click="AddPerson_Button">
+                        <StackPanel Orientation="Horizontal" >
+                            <!--Replace rectangle with image-->
+                            <StackPanel Width="250" VerticalAlignment="Center">
+                                <TextBlock Text="Add a friend" FontWeight="Thin" FontSize="30" Margin="5,0,0,0"/>
+                            </StackPanel>
+                            
+                            <Image Height="60" Width="60" Source="/SmashSampleApp;component/Images/Icons/plus_icon.png"/>
+                            
+                        </StackPanel>
+                    </Button>
+                    
+                    <ListBox Name="PeopleList" ItemsSource="{Binding}" Height="350">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Height="100">
@@ -139,22 +150,14 @@
                                         <TextBlock Text="{Binding name}" FontWeight="Thin" FontSize="30" Margin="5,0,0,0"/>
                                     </StackPanel>
                                     <Button VerticalAlignment="Stretch" Click="RemovePerson_Button" Tag="{Binding id}">
-                                        <Image Height="60" Width="60" Margin="9,0,9,0" Source="{Binding status, Converter={StaticResource FriendsListConverter}}"/>
+                                        <Image Height="60" Width="60" Source="{Binding status, Converter={StaticResource FriendsListConverter}}"/>
                                     </Button>
-                                    <TextBlock Text="{Binding name}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Height="100" VerticalAlignment="Top">
-                        <!--Replace rectangle with image-->
-                        <StackPanel Width="300" VerticalAlignment="Center">
-                            <TextBlock Text="Add a friend" FontWeight="Thin" FontSize="30" Margin="5,0,0,0"/>
-                        </StackPanel>
-                        <Button Name="AddButton" VerticalAlignment="Stretch" Click="AddPerson_Button">
-                            <Image Height="60" Width="60" Margin="9,0,9,0" Source="/SmashSampleApp;component/Images/Icons/plus_icon.png"/>
-                        </Button>
-                    </StackPanel>
+                    
+                    
                 </StackPanel>
 
             </controls:PanoramaItem>

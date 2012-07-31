@@ -148,6 +148,9 @@ namespace SmashSampleApp
 
             DataUse.Instance.ActiveLocationMode = true;
 
+
+            AddOrUpdateSettings("radius", 1);
+
             try
             {
                 string trans = (string)settings["transportation"];
@@ -268,7 +271,6 @@ namespace SmashSampleApp
             }
             #endregion
 
-            settings["radius"] = 1;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -547,14 +549,20 @@ namespace SmashSampleApp
         {
             Button b = (Button)sender;
             string id = (string)b.Tag;
+            List<Friend> newActiveFriends = new List<Friend>();
             foreach (Friend f in DataUse.Instance.ActiveFriends)
             {
-                if (f.id == id)
+                if (f.id != id)
                 {
-                    DataUse.Instance.ActiveFriends.Remove(f);
-                    break;
+                    newActiveFriends.Add(f);
                 }
             }
+
+            DataUse.Instance.ActiveFriends = null;
+            DataUse.Instance.ActiveFriends = newActiveFriends;
+
+            FinalizeList.DataContext = null;
+            FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
 
             PeopleList.DataContext = null;
             PeopleList.DataContext = DataUse.Instance.ActiveFriends;
@@ -1162,14 +1170,14 @@ namespace SmashSampleApp
                 if (isReady)
                 {
                     MainMap.Visibility = Visibility.Visible;
-                    DebugButtons.Visibility = Visibility.Visible;
+                    //DebugButtons.Visibility = Visibility.Visible;
                     FriendsOnMapList.Visibility = Visibility.Visible;
                     NotReadyText.Visibility = Visibility.Collapsed;
 
                     string eventname = (string)settings["eventname"];
                     string eventloc = (string)settings["eventloc"];
 
-                    MessageBox.Show(eventname + " at " + eventloc);
+                    // MessageBox.Show(eventname + " at " + eventloc);
 
                     plotEvent();
 
@@ -1233,7 +1241,7 @@ namespace SmashSampleApp
             AddOrUpdateSettings("setupMode", true);
             MainPanorama.Visibility = Visibility.Visible;
             MainMap.Visibility = Visibility.Collapsed;
-            DebugButtons.Visibility = Visibility.Collapsed;
+            //DebugButtons.Visibility = Visibility.Collapsed;
             FriendsOnMapList.Visibility = Visibility.Collapsed;
             ApplicationBar.IsVisible = false;
 
@@ -1307,7 +1315,7 @@ namespace SmashSampleApp
 
             if (friendMap.ContainsKey(f.id))
             {
-                MessageBox.Show(f.name + ", " + friendMap[f.id].Latitude + ", " + getEventLoc().Latitude + ", [" + f.transportation +"]");
+                // MessageBox.Show(f.name + ", " + friendMap[f.id].Latitude + ", " + getEventLoc().Latitude + ", [" + f.transportation +"]");
                 BingAPICall BAPI = new BingAPICall(friendMap[f.id], getEventLoc(), f.transportation, this, f);
                 BAPI.GetData();
 
