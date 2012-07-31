@@ -155,6 +155,11 @@ namespace SmashSampleApp
                 {
                     AddOrUpdateSettings("transportation", "car");
                 }
+                else
+                {
+                    TransportationText.Text = (string)settings["transportation"];
+                    TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/" + (string)settings["transportation"] + "_icon_white.png", UriKind.Relative));
+                }
             }
             catch
             {
@@ -263,7 +268,6 @@ namespace SmashSampleApp
             }
             #endregion
 
-            settings["transportationMode"] = "car";
             settings["radius"] = 1;
         }
 
@@ -508,25 +512,28 @@ namespace SmashSampleApp
 
         private void TransportationPanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            settings["transportationMode"] = transportationOptions[(transportationOptions.IndexOf((string)settings["transportationMode"]) + 1) % 3];
-            switch ((string)settings["transportationMode"])
+            settings["transportation"] = transportationOptions[(transportationOptions.IndexOf((string)settings["transportation"]) + 1) % 3];
+            switch ((string)settings["transportation"])
             {
                 case "bike":
                     TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/bike_icon_white.png", UriKind.Relative));
                     AddOrUpdateSettings("transportation", "bike");
+                    DataUse.Instance.ActiveFriends[0].transportation = "bike";
                     break;
                 case "car":
                     TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/car_icon_white.png", UriKind.Relative));
+                    DataUse.Instance.ActiveFriends[0].transportation = "car";
                     AddOrUpdateSettings("transportation", "car");
                     break;
                 case "walk":
                     TransportationOption.Source = new BitmapImage(new Uri("Images/Icons/walk_icon_white.png", UriKind.Relative));
+                    DataUse.Instance.ActiveFriends[0].transportation = "walk";
                     AddOrUpdateSettings("transportation", "walk");
                     break;
                 default:
                     break;
             }
-            TransportationText.Text = (string)settings["transportationMode"];
+            TransportationText.Text = (string)settings["transportation"];
         }
 
         private void RadiusPanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -651,7 +658,6 @@ namespace SmashSampleApp
                     foreach (var friend in DataUse.Instance.ActiveFriends)
 	                {
                         BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, friend.transportation, this, friend);
-                        
                         call.GetData();
                     }
                     FinalizeList.DataContext = null;

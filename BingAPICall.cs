@@ -89,7 +89,8 @@ namespace SmashSampleApp
             {
                 time = (int)desiredObject["travelDuration"];
             }
-            f.dataString = distance + " mi" + "\n" + time + " s";
+
+            f.dataString = distance + " mi" + "\n" + time/60 + "m" + time%60 + "s";
             MessageBox.Show(f.dataString);
 
             MP.FinalizeList.DataContext = null;
