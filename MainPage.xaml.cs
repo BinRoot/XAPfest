@@ -82,7 +82,7 @@ namespace SmashSampleApp
         private bool firstPlot = true;
         public List<Venue> venues;
         public Venue selectedVenue = null;
-        public List<string> transportationOptions = new List<string>(){ "car", "bike", "walk" };
+        public List<string> transportationOptions = new List<string>() { "car", "bike", "walk" };
         bool firstTimeLaunch = true;
         double currentLat = 0.0;
         double currentLon = 0.0;
@@ -91,7 +91,8 @@ namespace SmashSampleApp
         /// </summary>
         ///
 
-        private bool InSetupMode { 
+        private bool InSetupMode
+        {
             get
             {
                 bool setupMode = false;
@@ -107,7 +108,7 @@ namespace SmashSampleApp
             }
         }
 
-        Dictionary<String, GeoCoordinate> friendMap = new Dictionary<string,GeoCoordinate>();
+        Dictionary<String, GeoCoordinate> friendMap = new Dictionary<string, GeoCoordinate>();
         GeoCoordinateWatcher watcher;
         IDataService DS;
 
@@ -159,7 +160,7 @@ namespace SmashSampleApp
             FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
 
             //TestImage.Source = new BitmapImage(new Uri("https://apis.live.net/v5.0/" + DataUse.Instance.MyUserId + "/picture", UriKind.Absolute));
-            
+
             //this.SendText.Click += new RoutedEventHandler(this.SendText_Click);
             //this.Join.Click += new RoutedEventHandler(this.Join_Click);
             //this.Create.Click += new RoutedEventHandler(this.Create_Click);
@@ -177,13 +178,13 @@ namespace SmashSampleApp
                 this.session = SmashSession.JoinSessionFromState(HawaiiClient.HawaiiApplicationId, this.Dispatcher, state, new ISmashTable[] { this.chat });
             }
 
-            
+
             DS = new DataService(this);
             DataUse.Instance.DS = DS;
             DataUse.Instance.DS.GetFriends(DataUse.Instance.MyUserId, DataUse.Instance.MyUserName);
-            
+
             // Set the data context of the listbox control to the sample data
-           
+
             this.Loaded += new RoutedEventHandler(MainPage_Loaded);
 
             PeopleList.DataContext = DataUse.Instance.ActiveFriends;
@@ -293,7 +294,7 @@ namespace SmashSampleApp
 
                 setUpDone();
             }
-            else if(firstTimeLaunch)
+            else if (firstTimeLaunch)
             {
                 DataUse.Instance.DS.GetNextEventId();
             }
@@ -359,7 +360,7 @@ namespace SmashSampleApp
                         System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { NavigationService.Navigate(uri); });
                         return;
                     }
-                    
+
 
 
                     string[] dataParts = (relativeUri.Split('?')[1]).Split('&');
@@ -574,7 +575,7 @@ namespace SmashSampleApp
 
         public void plotVenues(List<Venue> venues)
         {
-            this.venues = venues; 
+            this.venues = venues;
             var list = (from x in venues select x.location).ToArray();
 
 
@@ -631,76 +632,87 @@ namespace SmashSampleApp
                     goButton.IsEnabled = true;
 
                     foreach (var friend in DataUse.Instance.ActiveFriends)
-	                {
+                    {
                         //BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, friend.transportation, this);
                         BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, "bike", this, friend);
-                        
+
                         call.GetData();
-	                }
+                    }
                     FinalizeList.DataContext = null;
                     FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
                 }
 
-                List<GeoCoordinate> locations = new List<GeoCoordinate>();
-
-                locations.Add(selectedVenue.location);
-                locations.Add(watcher.Position.Location);
-
-
                 RouteLayer.Children.Clear();
-
-                RouteService.RouteServiceClient routeService = new RouteService.RouteServiceClient("BasicHttpBinding_IRouteService");
-
-
-                routeService.CalculateRouteCompleted += (sender2, e2) =>
-                {
-                    var points = e2.Result.Result.RoutePath.Points;
-                    var coordinates = points.Select(x => new GeoCoordinate(x.Latitude, x.Longitude));
-
-                    var routeColor = Colors.Blue;
-                    var routeBrush = new SolidColorBrush(routeColor);
-
-                    var routeLine = new MapPolyline()
-                    {
-                        Locations = new LocationCollection(),
-                        Stroke = routeBrush,
-                        Opacity = 0.65,
-                        StrokeThickness = 5.0,
-                    };
-
-                    foreach (var location in points)
-                    {
-                        routeLine.Locations.Add(new GeoCoordinate(location.Latitude, location.Longitude));
-                    }
-
-                    RouteLayer.Children.Add(routeLine);
-                };
-
-                LyncUpMap.SetView(LocationRect.CreateLocationRect(locations));
-
-                routeService.CalculateRouteAsync(new RouteService.RouteRequest()
-                {
-                    Credentials = new RouteService.Credentials()
-                    {
-                        ApplicationId = "AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL"
-                    },
-                    Options = new RouteService.RouteOptions()
-                    {
-                        RoutePathType = RouteService.RoutePathType.Points
-                    },
-                    Waypoints = new ObservableCollection<RouteService.Waypoint>(
-                        locations.Select(x => new RouteService.Waypoint()
-                        {
-                            Location = new RouteService.Location() { Latitude = x.Latitude, Longitude = x.Longitude }
-                        }))
-                });
+                plotRoute(selectedVenue.location, watcher.Position.Location, RouteLayer);
             }
             catch { };
-             
+
 
             //So I heard you like casting...
             ((TextBlock)((Pushpin)sender).Content).Visibility = Visibility.Visible;
             e.Handled = true;
+        }
+
+        public void plotRoute(GeoCoordinate start, GeoCoordinate end, MapLayer ml)
+        {
+            List<GeoCoordinate> locations = new List<GeoCoordinate>();
+
+            locations.Add(start);
+            locations.Add(end);
+
+            RouteService.RouteServiceClient routeService = new RouteService.RouteServiceClient("BasicHttpBinding_IRouteService");
+
+            routeService.CalculateRouteCompleted += (sender2, e2) =>
+            {
+                var points = e2.Result.Result.RoutePath.Points;
+                var coordinates = points.Select(x => new GeoCoordinate(x.Latitude, x.Longitude));
+
+                var routeColor = Colors.Blue;
+                var routeBrush = new SolidColorBrush(routeColor);
+
+                var routeLine = new MapPolyline()
+                {
+                    Locations = new LocationCollection(),
+                    Stroke = routeBrush,
+                    Opacity = 0.65,
+                    StrokeThickness = 5.0,
+                };
+
+                foreach (var location in points)
+                {
+                    routeLine.Locations.Add(new GeoCoordinate(location.Latitude, location.Longitude));
+                }
+
+                RouteLayer.Children.Add(routeLine);
+            };
+
+            LyncUpMap.SetView(LocationRect.CreateLocationRect(locations));
+
+            routeService.CalculateRouteAsync(new RouteService.RouteRequest()
+            {
+                Credentials = new RouteService.Credentials()
+                {
+                    ApplicationId = "AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL"
+                },
+                Options = new RouteService.RouteOptions()
+                {
+                    RoutePathType = RouteService.RoutePathType.Points
+                },
+                Waypoints = new ObservableCollection<RouteService.Waypoint>(
+                    locations.Select(x => new RouteService.Waypoint()
+                    {
+                        Location = new RouteService.Location() { Latitude = x.Latitude, Longitude = x.Longitude }
+                    }))
+            });
+        }
+
+        public void plotFriendRoutes()
+        {
+            RouteLayerMain.Children.Clear();
+            foreach (var item in friendMap.Values)
+            {
+                plotRoute(item, selectedVenue.location, RouteLayerMain);
+            }
         }
 
         private void map_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -727,7 +739,7 @@ namespace SmashSampleApp
         }
 
 
-        public void positionChanged(double lat, double lon) 
+        public void positionChanged(double lat, double lon)
         {
             LyncUpMap.Center = new GeoCoordinate(lat, lon);
 
@@ -811,7 +823,7 @@ namespace SmashSampleApp
                     }
                     firstPlot = false;
                 }
-                
+
                 List<Pushpin> friendLocations = new List<Pushpin>();
 
                 try
@@ -821,7 +833,7 @@ namespace SmashSampleApp
 
                     foreach (var id in friendMap.Keys)
                     {
-                        
+
                         GeoCoordinate loc = friendMap[id];
 
 
@@ -856,12 +868,12 @@ namespace SmashSampleApp
                     {
                         if (InSetupMode)
                         {
-                            
+
                             LyncUpMap.Children.Add(item);
                         }
                         else
                         {
-                            MainMap.Children.Add(item);  
+                            MainMap.Children.Add(item);
                         }
                     }
 
@@ -1104,8 +1116,8 @@ namespace SmashSampleApp
             {
 
             }
-            
-            
+
+
 
         }
 

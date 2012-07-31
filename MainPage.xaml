@@ -42,9 +42,11 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        
 
-        <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap" />
+
+        <my:Map Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CredentialsProvider="AhrsbBfWVAnxFwOsw5ARNmg2r_rjHf5nNTKa-bsdhKUZaLSwIsLi7m5_lo86b2XL" Name="MainMap">
+            <my:MapLayer x:Name="RouteLayerMain" />
+        </my:Map>
 
         <TextBlock Name="NotReadyText" Visibility="Collapsed" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
