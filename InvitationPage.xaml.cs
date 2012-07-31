@@ -138,6 +138,7 @@ namespace SmashSampleApp
 
         public void GoBackLater()
         {
+            MP.LeaveSmash();
             Thread.Sleep(2000);
             System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() => { NavigationService.GoBack();});
             

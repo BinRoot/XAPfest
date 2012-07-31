@@ -49,11 +49,11 @@ namespace SmashSampleApp
         {
             string clientID;
 
-            if (!IsolatedStorageSettings.ApplicationSettings.TryGetValue(UniqueClientKey, out clientID))
-            {
+            //if (!IsolatedStorageSettings.ApplicationSettings.TryGetValue(UniqueClientKey, out clientID))
+            //{
                 clientID = Guid.NewGuid().ToString();
-                IsolatedStorageSettings.ApplicationSettings.Add(UniqueClientKey, clientID);
-            }
+            //    IsolatedStorageSettings.ApplicationSettings.Add(UniqueClientKey, clientID);
+            //}
 
             return clientID;
         }

@@ -112,6 +112,7 @@ namespace SmashSampleApp
         /// <param name="e"></param>
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
+            DataUse.Instance.MP.LeaveSmash();
         }
 
         /// <summary>

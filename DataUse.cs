@@ -28,6 +28,8 @@ namespace SmashSampleApp
         public string MessageToSend { get; set; }
         public bool ActiveLocationMode { get; set; }
 
+        public MainPage MP;
+
         private static DataUse instance;
         private DataUse() { }
 

@@ -143,10 +143,12 @@ namespace SmashSampleApp
         public MainPage()
         {
             this.InitializeComponent();
+            DataUse.Instance.MP = this;
 
             this.VerifyHawaiiId();
 
             DataUse.Instance.ActiveLocationMode = true;
+
 
 
             AddOrUpdateSettings("radius", 1);
@@ -957,17 +959,21 @@ namespace SmashSampleApp
 
         private void plotEvent()
         {
-            Pushpin venuePushpin = new Pushpin();
-            venuePushpin.Background = new SolidColorBrush(Colors.Blue);
-            venuePushpin.Opacity = 0.6;
-            venuePushpin.Location = getEventLoc();
-            venuePushpin.Tap += this.pin_Tap2;
+            try
+            {
+                Pushpin venuePushpin = new Pushpin();
+                venuePushpin.Background = new SolidColorBrush(Colors.Blue);
+                venuePushpin.Opacity = 0.6;
+                venuePushpin.Location = getEventLoc();
+                venuePushpin.Tap += this.pin_Tap2;
 
-            venuePushpin.Content = new TextBlock();
-            ((TextBlock)venuePushpin.Content).Text = (string)settings["eventname"];
-            ((TextBlock)venuePushpin.Content).Visibility = Visibility.Collapsed;
+                venuePushpin.Content = new TextBlock();
+                ((TextBlock)venuePushpin.Content).Text = (string)settings["eventname"];
+                ((TextBlock)venuePushpin.Content).Visibility = Visibility.Collapsed;
 
-            MainMap.Children.Add(venuePushpin);
+                MainMap.Children.Add(venuePushpin);
+            }
+            catch { }
         }
 
         private void FoodButton_Click(object sender, RoutedEventArgs e)
@@ -1165,6 +1171,12 @@ namespace SmashSampleApp
             }
         }
 
+        public void LeaveSmash()
+        {
+            // doesn't work...
+            // session.Shutdown();
+        }
+
         private void setUpDone()
         {
             MainMap.Tap += this.map_Tap;
@@ -1172,6 +1184,7 @@ namespace SmashSampleApp
             ApplicationBar.IsVisible = true;
             MainPanorama.Visibility = Visibility.Collapsed;
 
+            friendLocationUpdated();
             plotLocation();
 
             try
