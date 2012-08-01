@@ -197,7 +197,7 @@
     <Resource Include="Images\Icons\TileIcon.png" />
     <Content Include="Images\Icons\back_icon.png" />
     <Content Include="Images\Icons\search_icon.png" />
-    <Resource Include="Images\Icons\ApplicationIconLetters.png" />
+    <Content Include="Images\Icons\ApplicationIconLetters.png" />
     <Resource Include="Images\Icons\walk_icon_white.png" />
     <Resource Include="Images\mapbar.png" />
     <Resource Include="Images\mapbardark.png" />
