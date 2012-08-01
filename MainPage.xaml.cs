@@ -170,7 +170,7 @@ namespace SmashSampleApp
             {
                 AddOrUpdateSettings("transportation", "car");
             }
-            
+
 
             if (InSetupMode == false)
             {
@@ -674,7 +674,7 @@ namespace SmashSampleApp
                     goButton.Content = "Go!";
 
                     foreach (var friend in DataUse.Instance.ActiveFriends)
-	                {
+                    {
                         BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, friend.transportation, this, friend);
                         call.GetData();
                     }
@@ -765,10 +765,10 @@ namespace SmashSampleApp
                     GeoCoordinate gEL = getEventLoc();
                     if (gEL != null)
                     {
-                        plotRoute(item, gEL, RouteLayerMain); 
+                        plotRoute(item, gEL, RouteLayerMain);
                     }
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -1113,7 +1113,7 @@ namespace SmashSampleApp
                 string latStr = strSplit[3];
                 string lonStr = strSplit[4];
 
-                
+
                 bool found = false;
                 foreach (Friend fa in DataUse.Instance.ActiveFriends)
                 {
@@ -1217,7 +1217,7 @@ namespace SmashSampleApp
             }
             catch (Exception e)
             {
-                MessageBox.Show("*>* "+e.Message);
+                MessageBox.Show("*>* " + e.Message);
             }
         }
 
@@ -1284,22 +1284,13 @@ namespace SmashSampleApp
             FinalizeList.DataContext = null;
             FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
 
-            try
+            var keysToBeRemoved = (from x in friendMap.Keys
+                                   where (string)x != DataUse.Instance.MyUserId
+                                   select x).ToList();
+
+            foreach (var item in keysToBeRemoved)
             {
-
-                var keysToBeRemoved = (from x in friendMap.Keys
-                                       where (string)x != DataUse.Instance.MyUserId
-                                       select x).ToList();
-
-                foreach (var item in keysToBeRemoved)
-                {
-                    friendMap.Remove((string)item);
-                }
-
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("fuck");
+                friendMap.Remove((string)item);
             }
         }
 
@@ -1366,7 +1357,7 @@ namespace SmashSampleApp
 
         private void friendOnMapTapped(Friend f)
         {
-            
+
             // TODO: ask bing api for data update
 
             if (friendMap.ContainsKey(f.id))
@@ -1402,12 +1393,12 @@ namespace SmashSampleApp
         private bool checkIfFinished()
         {
             foreach (var item in DataUse.Instance.ActiveFriends)
-	        {
+            {
                 if (Double.Parse(item.dataString.Split(new string[] { "mi" }, StringSplitOptions.None)[0].Trim()) > .5)
                 {
                     return false;
                 }
-	        }
+            }
             return true;
         }
     }
