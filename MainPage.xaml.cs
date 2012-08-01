@@ -1219,9 +1219,6 @@ namespace SmashSampleApp
             {
                 MessageBox.Show("*>* "+e.Message);
             }
-
-
-
         }
 
         IsolatedStorageSettings settings = IsolatedStorageSettings.ApplicationSettings;
@@ -1260,6 +1257,10 @@ namespace SmashSampleApp
             if (friendMap.Keys.Count > 0 && !InSetupMode)
             {
                 plotFriendRoutes();
+                if (checkIfFinished())
+                {
+                    MessageBox.Show("GTFO");
+                }
             }
         }
 
@@ -1272,7 +1273,34 @@ namespace SmashSampleApp
             //DebugButtons.Visibility = Visibility.Collapsed;
             FriendsOnMapList.Visibility = Visibility.Collapsed;
             ApplicationBar.IsVisible = false;
+            RouteLayer.Children.Clear();
+            LyncUpMap.Children.RemoveAt(0);
 
+            DataUse.Instance.ActiveFriends.RemoveRange(1, DataUse.Instance.ActiveFriends.Count - 1);
+
+            PeopleList.DataContext = null;
+            PeopleList.DataContext = DataUse.Instance.ActiveFriends;
+
+            FinalizeList.DataContext = null;
+            FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
+
+            try
+            {
+
+                var keysToBeRemoved = (from x in friendMap.Keys
+                                       where (string)x != DataUse.Instance.MyUserId
+                                       select x).ToList();
+
+                foreach (var item in keysToBeRemoved)
+                {
+                    friendMap.Remove((string)item);
+                }
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("fuck");
+            }
         }
 
         private void Go_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -1369,6 +1397,18 @@ namespace SmashSampleApp
             {
                 return null;
             }
+        }
+
+        private bool checkIfFinished()
+        {
+            foreach (var item in DataUse.Instance.ActiveFriends)
+	        {
+                if (Double.Parse(item.dataString.Split(new string[] { "mi" }, StringSplitOptions.None)[0].Trim()) > .5)
+                {
+                    return false;
+                }
+	        }
+            return true;
         }
     }
 }

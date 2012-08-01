@@ -229,8 +229,7 @@
             <shell:ApplicationBarIconButton IconUri="/Images/Icons/plus_icon.png" Text="Button 1"/>
             <shell:ApplicationBarIconButton IconUri="/Images/Icons/radius_icon.png" Text="Button 2"/>
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="Leave this lync up" Click="Leave_MenuItem_Click"/>
+                <shell:ApplicationBarMenuItem Text="Leave this LyncUp" Click="Leave_MenuItem_Click"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
