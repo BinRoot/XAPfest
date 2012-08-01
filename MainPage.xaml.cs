@@ -171,7 +171,7 @@ namespace SmashSampleApp
             {
                 AddOrUpdateSettings("transportation", "car");
             }
-            
+
 
             if (InSetupMode == false)
             {
@@ -688,7 +688,7 @@ namespace SmashSampleApp
                     goButton.Content = "Go!";
 
                     foreach (var friend in DataUse.Instance.ActiveFriends)
-	                {
+                    {
                         BingAPICall call = new BingAPICall(friendMap[friend.id], selectedVenue.location, friend.transportation, this, friend);
                         call.GetData();
                     }
@@ -779,10 +779,10 @@ namespace SmashSampleApp
                     GeoCoordinate gEL = getEventLoc();
                     if (gEL != null)
                     {
-                        plotRoute(item, gEL, RouteLayerMain); 
+                        plotRoute(item, gEL, RouteLayerMain);
                     }
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -1127,7 +1127,7 @@ namespace SmashSampleApp
                 string latStr = strSplit[3];
                 string lonStr = strSplit[4];
 
-                
+
                 bool found = false;
                 foreach (Friend fa in DataUse.Instance.ActiveFriends)
                 {
@@ -1232,6 +1232,7 @@ namespace SmashSampleApp
             catch (Exception e)
             {
                 // MessageBox.Show("*>* "+e.Message);
+
             }
         }
 
@@ -1282,58 +1283,10 @@ namespace SmashSampleApp
 
         private void Leave_MenuItem_Click(object sender, EventArgs e)
         {
-            NavigationService.GoBack();
             AddOrUpdateSettings("ready", false);
             AddOrUpdateSettings("setupMode", true);
+            NavigationService.GoBack();
             return;
-
-            
-            MainPanorama.Visibility = Visibility.Visible;
-            MainMap.Visibility = Visibility.Collapsed;
-            //DebugButtons.Visibility = Visibility.Collapsed;
-            FriendsOnMapList.Visibility = Visibility.Collapsed;
-            ApplicationBar.IsVisible = false;
-            RouteLayer.Children.Clear();
-            LyncUpMap.Children.RemoveAt(0);
-
-            Friend me = null;
-            foreach (Friend f in DataUse.Instance.ActiveFriends)
-            {
-                if (f.id == DataUse.Instance.MyUserId)
-                {
-                    me = f;
-                    me.status = "yes";
-                    break;
-                }
-            }
-            DataUse.Instance.ActiveFriends.Clear();
-            DataUse.Instance.ActiveFriends.Add(me);
-
-            PeopleList.DataContext = null;
-            PeopleList.DataContext = DataUse.Instance.ActiveFriends;
-
-            FinalizeList.DataContext = null;
-            FinalizeList.DataContext = DataUse.Instance.ActiveFriends;
-
-            try
-            {
-
-                var keysToBeRemoved = (from x in friendMap.Keys
-                                       where (string)x != DataUse.Instance.MyUserId
-                                       select x).ToList();
-
-                foreach (var item in keysToBeRemoved)
-                {
-                    friendMap.Remove((string)item);
-                }
-
-                clearMap(typeof(Pushpin), LyncUpMap);
-
-            }
-            catch (Exception)
-            {
-                //MessageBox.Show("fuck");
-            }
         }
 
         private void Go_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -1399,7 +1352,7 @@ namespace SmashSampleApp
 
         private void friendOnMapTapped(Friend f)
         {
-            
+
             // TODO: ask bing api for data update
 
             if (friendMap.ContainsKey(f.id))
@@ -1522,7 +1475,6 @@ namespace SmashSampleApp
             // If bingMapsDirectionsTask.Start is not set, the user's current location is used as the start point.
 
             bingMapsDirectionsTask.Show();
-
         }
     }
 }
