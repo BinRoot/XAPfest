@@ -92,7 +92,7 @@ namespace SmashSampleApp
 
             TimeSpan t = TimeSpan.FromSeconds(time);
             f.dataString = distance + " mi" + "\n" + string.Format((t.Hours == 0 ? "" : "{0:D1}h:") + "{1:D2}m", t.Hours, t.Minutes); ;
-            MessageBox.Show(f.dataString);
+            // MessageBox.Show(f.dataString);
 
             MP.FinalizeList.DataContext = null;
             MP.FinalizeList.DataContext = DataUse.Instance.ActiveFriends;

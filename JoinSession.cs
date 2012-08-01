@@ -29,9 +29,6 @@ namespace SmashSampleApp
     using System.IO.IsolatedStorage;
 
 
-
-
-
     /// <summary>
     /// 
     /// </summary>
@@ -156,6 +153,7 @@ namespace SmashSampleApp
                 sessionManager.JoinSessionAsync(HawaiiClient.HawaiiApplicationId, this.Dispatcher, this.GetMeetingToken(token), user, email, GetUniqueClientID(), new ISmashTable[] { this.chat }, null);
                 
                 // MessageBox.Show("I've Joined room " + token);
+                AddOrUpdateSettings("eventid", token);
             }
         }
 

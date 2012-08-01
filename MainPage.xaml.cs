@@ -316,10 +316,15 @@ namespace SmashSampleApp
 
                 setUpDone();
             }
-            else if (firstTimeLaunch)
+            else if (!InSetupMode)
+            {
+                JoinMeeting((string)settings["eventid"]);
+            }
+            else if (firstTimeLaunch && InSetupMode)
             {
                 DataUse.Instance.DS.GetNextEventId();
             }
+
 
             firstTimeLaunch = false;
 
