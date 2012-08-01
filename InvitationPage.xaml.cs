@@ -64,7 +64,6 @@ namespace SmashSampleApp
 
                     DataUse.Instance.MyUserId = myid;
                     DataUse.Instance.MyUserName = myname;
-                    PageTitle.Text = friend;
 
 
                     MP = new MainPage(false);
