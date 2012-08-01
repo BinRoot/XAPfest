@@ -119,9 +119,9 @@ namespace SmashSampleApp
             DataTable["transportation"] = transportation;
             PushAPI.SendToastToUser(pushkey, Title, SubTitle, DataTable, "MainPage");
 
-            WalkButton.IsEnabled = true;
-            BikeButton.IsEnabled = true;
-            CarButton.IsEnabled = true;
+            WalkButton.IsEnabled = false;
+            BikeButton.IsEnabled = false;
+            CarButton.IsEnabled = false;
 
             if (transportation == "walk")
                 WalkButtonText.Text = "...";

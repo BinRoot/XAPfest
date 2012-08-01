@@ -196,6 +196,8 @@
     <Resource Include="Images\Icons\ApplicationIcon.png" />
     <Resource Include="Images\Icons\TileIcon.png" />
     <Content Include="Images\Icons\back_icon.png" />
+    <Content Include="Images\Icons\car_icon_white_small.png" />
+    <Content Include="Images\Icons\plus_icon_small.png" />
     <Content Include="Images\Icons\search_icon.png" />
     <Content Include="Images\Icons\ApplicationIconLetters.png" />
     <Resource Include="Images\Icons\walk_icon_white.png" />
@@ -255,13 +257,13 @@
     <Resource Include="Images\background.png" />
     <Resource Include="Images\Icons\bike_icon.png" />
     <Resource Include="Images\Icons\bike_icon_white.png" />
-    <Resource Include="Images\Icons\car_icon.png" />
+    <Content Include="Images\Icons\car_icon.png" />
     <Resource Include="Images\Icons\car_icon_white.png" />
     <Resource Include="Images\Icons\check_icon.png" />
     <Resource Include="Images\Icons\cross_icon.png" />
     <Resource Include="Images\Icons\name_icon.png" />
     <Resource Include="Images\Icons\name_icon_white.png" />
-    <Resource Include="Images\Icons\plus_icon.png" />
+    <Content Include="Images\Icons\plus_icon.png" />
     <Content Include="Images\Icons\radius_icon.png" />
     <Resource Include="Images\Icons\radius_icon_white.png" />
     <Resource Include="Images\Icons\update_icon.png" />

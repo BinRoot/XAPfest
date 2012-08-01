@@ -215,7 +215,7 @@ namespace SmashSampleApp
             sessionManager.CreateSessionAsync(HawaiiClient.HawaiiApplicationId, this.GetMeetingToken(out token), TextEntry.Text, user, email, new string[] { "*" }, TimeSpan.FromMinutes(60), new Guid(ManagementID), token);
 
             TextEntry.Text = token;
-            MessageBox.Show("created: "+token);
+            // MessageBox.Show("created: "+token);
 
             DataUse.Instance.RoomName = token;
         }

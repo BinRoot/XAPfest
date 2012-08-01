@@ -305,7 +305,7 @@ namespace SmashSampleApp
                 }
                 catch (Exception err)
                 {
-                    MessageBox.Show("onnav err: " + err.Message);
+                    //MessageBox.Show("onnav err: " + err.Message);
                 }
 
 
@@ -557,6 +557,19 @@ namespace SmashSampleApp
         {
             Button b = (Button)sender;
             string id = (string)b.Tag;
+
+            if (id == DataUse.Instance.MyUserId)
+            {
+                return;
+            }
+
+            MessageBoxResult m = MessageBox.Show("Do you want to remove this friend?", "Remove", MessageBoxButton.OKCancel);
+
+            if (m == MessageBoxResult.Cancel)
+            {
+                return;
+            }
+
             List<Friend> newActiveFriends = new List<Friend>();
             foreach (Friend f in DataUse.Instance.ActiveFriends)
             {
@@ -773,7 +786,7 @@ namespace SmashSampleApp
             }
             catch (Exception e)
             {
-                MessageBox.Show(">< " + e.Message);
+                // MessageBox.Show(">< " + e.Message);
             }
         }
 
@@ -956,7 +969,7 @@ namespace SmashSampleApp
                 }
                 catch (Exception er)
                 {
-                    MessageBox.Show("shit2: " + er.Message);
+                    // MessageBox.Show("shit2: " + er.Message);
                 }
             }
         }
@@ -1136,7 +1149,7 @@ namespace SmashSampleApp
                     FriendsOnMapList.DataContext = DataUse.Instance.ActiveFriends;
 
                     //MessageBox.Show("didn't find " + friendid +", ActiveFriends size: "+DataUse.Instance.ActiveFriends.Count);
-
+                    friendOnMapTapped(fa);
                 }
 
 
@@ -1167,13 +1180,13 @@ namespace SmashSampleApp
                 }
                 catch (Exception er)
                 {
-                    MessageBox.Show("**" + er.Message);
+                    // MessageBox.Show("**" + er.Message);
                 }
 
             }
             else
             {
-                MessageBox.Show("msg received, but incorrect format: " + newMessage);
+                // MessageBox.Show("msg received, but incorrect format: " + newMessage);
             }
         }
 
@@ -1218,7 +1231,7 @@ namespace SmashSampleApp
             }
             catch (Exception e)
             {
-                MessageBox.Show("*>* "+e.Message);
+                // MessageBox.Show("*>* "+e.Message);
             }
         }
 
@@ -1260,15 +1273,21 @@ namespace SmashSampleApp
                 plotFriendRoutes();
                 if (checkIfFinished())
                 {
-                    MessageBox.Show("GTFO");
+                    MessageBox.Show("Everyone has reached the destination. Press ok to leave the app.");
+                    NavigationService.GoBack();
+                    //MessageBox.Show("GTFO");
                 }
             }
         }
 
         private void Leave_MenuItem_Click(object sender, EventArgs e)
         {
+            NavigationService.GoBack();
             AddOrUpdateSettings("ready", false);
             AddOrUpdateSettings("setupMode", true);
+            return;
+
+            
             MainPanorama.Visibility = Visibility.Visible;
             MainMap.Visibility = Visibility.Collapsed;
             //DebugButtons.Visibility = Visibility.Collapsed;
@@ -1277,7 +1296,18 @@ namespace SmashSampleApp
             RouteLayer.Children.Clear();
             LyncUpMap.Children.RemoveAt(0);
 
-            DataUse.Instance.ActiveFriends.RemoveRange(1, DataUse.Instance.ActiveFriends.Count - 1);
+            Friend me = null;
+            foreach (Friend f in DataUse.Instance.ActiveFriends)
+            {
+                if (f.id == DataUse.Instance.MyUserId)
+                {
+                    me = f;
+                    me.status = "yes";
+                    break;
+                }
+            }
+            DataUse.Instance.ActiveFriends.Clear();
+            DataUse.Instance.ActiveFriends.Add(me);
 
             PeopleList.DataContext = null;
             PeopleList.DataContext = DataUse.Instance.ActiveFriends;
@@ -1297,10 +1327,12 @@ namespace SmashSampleApp
                     friendMap.Remove((string)item);
                 }
 
+                clearMap(typeof(Pushpin), LyncUpMap);
+
             }
             catch (Exception)
             {
-                MessageBox.Show("fuck");
+                //MessageBox.Show("fuck");
             }
         }
 
@@ -1455,14 +1487,42 @@ namespace SmashSampleApp
 
         private bool checkIfFinished()
         {
-            foreach (var item in DataUse.Instance.ActiveFriends)
-	        {
-                if (Double.Parse(item.dataString.Split(new string[] { "mi" }, StringSplitOptions.None)[0].Trim()) > .5)
+            try
+            {
+                foreach (var item in DataUse.Instance.ActiveFriends)
                 {
-                    return false;
+                    double dist = Double.Parse(item.dataString.Split(new string[] { "mi" }, StringSplitOptions.None)[0].Trim());
+                    if (dist > 0.5)
+                    {
+                        return false;
+                    }
                 }
-	        }
-            return true;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+
+        private void Nav_MenuItem_Click(object sender, EventArgs e)
+        {
+            BingMapsDirectionsTask bingMapsDirectionsTask = new BingMapsDirectionsTask();
+
+            // You can specify a label and a geocoordinate for the end point.
+            // GeoCoordinate spaceNeedleLocation = new GeoCoordinate(47.6204,-122.3493);
+            // LabeledMapLocation spaceNeedleLML = new LabeledMapLocation("Space Needle", spaceNeedleLocation);
+
+            // If you set the geocoordinate parameter to null, the label parameter is used as a search term.
+            LabeledMapLocation eventLML = new LabeledMapLocation((string)settings["eventname"], getEventLoc());
+
+            bingMapsDirectionsTask.End = eventLML;
+
+            // If bingMapsDirectionsTask.Start is not set, the user's current location is used as the start point.
+
+            bingMapsDirectionsTask.Show();
+
         }
     }
 }

@@ -238,10 +238,9 @@
     <!--Sample code showing usage of ApplicationBar-->
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/Icons/plus_icon.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/Icons/radius_icon.png" Text="Button 2"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/Icons/back_icon.png" Text="Leave" Click="Leave_MenuItem_Click"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/Icons/car_icon_white_small.png" Text="Navigate" Click="Nav_MenuItem_Click"/>
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="Leave this LyncUp" Click="Leave_MenuItem_Click"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
