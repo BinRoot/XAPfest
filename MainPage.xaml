@@ -49,7 +49,7 @@
 
         <TextBlock Name="NotReadyText" Visibility="Collapsed" Text="Not ready yet" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
-        <Image Source="Images/mapbar.png" VerticalAlignment="Top" Height="100" Width="600" HorizontalAlignment="Stretch"/>
+        <Image Source="Images/mapbardark.png" VerticalAlignment="Top" Height="100" Width="600" HorizontalAlignment="Stretch"/>
         <ListBox Visibility="Collapsed" Name="FriendsOnMapList" ItemsSource="{Binding}" VerticalAlignment="Top" HorizontalAlignment="Left">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -59,7 +59,13 @@
 
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Image Width="100" Height="100" Source="{Binding ImgSrc}" Tag="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center" Tap="Friend_Map_Tap"/>
+                    <Image Width="100" Height="100"  Source="{Binding ImgSrc}" Tag="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center" Tap="Friend_Map_Tap">
+                        <toolkit:ContextMenuService.ContextMenu>
+                            <toolkit:ContextMenu>
+                                <toolkit:MenuItem Header="Ping for location update" Click="Loc_MenuItem_Click" Tag="{Binding}"/>
+                            </toolkit:ContextMenu>
+                        </toolkit:ContextMenuService.ContextMenu>
+                    </Image>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

@@ -48,6 +48,12 @@ namespace SmashSampleApp
             send("http://lyncapi.appspot.com/user?pid=" + id);
         }
 
+        public void GetPushKey(string id, MainPage MP)
+        {
+            this.MP = MP;
+            send("http://lyncapi.appspot.com/user?pid=" + id);
+        }
+
         public void GetSearchResults(string searchStr, FriendAdder FA)
         {
             this.FA = FA;
@@ -104,7 +110,17 @@ namespace SmashSampleApp
             else if (WC.BaseAddress.Contains("pid="))
             {
                 string pushkey = e.Result;
-                IP.SendToastToUser(pushkey);
+                if (IP != null)
+                {
+                    IP.SendToastToUser(pushkey);
+                    IP = null;
+                }
+                else
+                {
+                    MP.SendQuickToastToUser(pushkey);
+                    MP = null;
+                }
+                
             }
             else if (WC.BaseAddress.Contains("/event"))
             {
