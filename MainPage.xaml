@@ -146,6 +146,12 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Height="100">
+                                    <toolkit:ContextMenuService.ContextMenu>
+                                        <toolkit:ContextMenu>
+                                            <toolkit:MenuItem Header="Ping again for location..." Click="Ping_MenuItem_Click" Tag="{Binding}"/>
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
+                                    
                                     <StackPanel Width="300" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding name}" FontWeight="Thin" FontSize="30" Margin="5,0,0,0"/>
                                     </StackPanel>

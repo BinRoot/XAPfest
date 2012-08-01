@@ -40,6 +40,7 @@ namespace SmashSampleApp
     using System.ServiceModel;
     using System.Collections.ObjectModel;
     using System.Text.RegularExpressions;
+    using System.Collections;
 
 
 
@@ -1369,6 +1370,31 @@ namespace SmashSampleApp
             {
                 return null;
             }
+        }
+
+        private void Ping_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = (MenuItem)sender;
+            Friend f = (Friend)mi.Tag;
+            SendToastToUser(f);
+        }
+
+        private void SendToastToUser(Friend f)
+        {
+            string Title = "LyncUp";
+            string SubTitle = DataUse.Instance.MyUserName + " wants to lync up!";
+            string FriendName = DataUse.Instance.MyUserName;
+            string FriendId = DataUse.Instance.MyUserId;
+            string EventId = DataUse.Instance.RoomName + "";
+            IDictionary DataTable = new Dictionary<string, string>();
+            DataTable["friend"] = FriendName;
+            DataTable["eventid"] = EventId;
+            DataTable["friendid"] = FriendId;
+            DataTable["myid"] = f.id;
+            DataTable["myname"] = f.name;
+
+            PushAPI.SendToastToUser(f.pushkey, Title, SubTitle, DataTable, "InvitationPage");
+
         }
     }
 }
