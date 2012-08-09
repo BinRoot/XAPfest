@@ -1285,8 +1285,8 @@ namespace SmashSampleApp
         {
             AddOrUpdateSettings("ready", false);
             AddOrUpdateSettings("setupMode", true);
-            NavigationService.GoBack();
-            return;
+            //NavigationService.GoBack();
+            
         }
 
         private void Go_Tap(object sender, System.Windows.Input.GestureEventArgs e)
